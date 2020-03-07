@@ -105,7 +105,7 @@ const checkSpot = (board, snakes, me, position) => {
 
 const getClosestFood = (body, position) => {
   const food = body.board.food.reduce((closest, crumb) => {
-    if (Math.abs(position.x - crumb.x) + Math.abs(position.y - crumb.y)) {
+    if (Math.abs(position.x - crumb.x) + Math.abs(position.y - crumb.y) < Math.abs(position.x - closest.x) + Math.abs(position.y - closest.y)) {
       closest.x = crumb.x;
       closest.y = crumb.y;
     }
