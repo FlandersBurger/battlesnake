@@ -107,8 +107,8 @@ const pickDirection = (directions, me, board) => {
     'left': board.width / 2 < me.x,
     'right': board.width / 2 > me.x
   };
-  const validDirections = directions.filter(direction => pieces[direction]);
-  return validDirections[Math.floor(Math.random() * validDirections.length)];
+  const recommendedDirections = directions.filter(direction => pieces[direction]);
+  return recommendedDirections.length > 0 ? recommendedDirections[Math.floor(Math.random() * recommendedDirections.length)] : directions[Math.floor(Math.random() * directions.length)];
 };
 
 const checkSpot = (board, snakes, me, position) => {
