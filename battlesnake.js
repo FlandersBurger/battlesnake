@@ -2,9 +2,7 @@
 const router = require('express').Router();
 const _ = require('underscore');
 
-let games = {
-
-};
+let games = {};
 
 router.post('/start', function ({ body }, res, next) {
   games[body.game.id] = body;
@@ -52,15 +50,16 @@ router.post('/move', function ({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (validDirections.indexOf(games[body.game.id]) >= 0) {
+  if (games[body.game.id] && bestDirections.indexOf(games[body.game.id]) >= 0) {
     direction = games[body.game.id];
   } else {
     const direction = bestDirections.length > 0 ? bestDirections[Math.floor(Math.random() * bestDirections.length)] : validDirections[Math.floor(Math.random() * validDirections.length)];
   }
 
-  console.log(validDirections);
-  console.log(bestDirections);
-  console.log(direction);
+  console.log(`Valid directions: ${validDirections}`);
+  console.log(`Best directions: ${bestDirections}`);
+  console.log(`Previous direction: ${games[body.game.id]}`);
+  console.log(`Chosen direction: ${direction}`);
   games[body.game.id] = direction;
   res.json({
     move: direction,
