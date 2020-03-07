@@ -52,7 +52,7 @@ router.post('/move', function ({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (validDirections.indexOf(games[body.game.id]) >=0 {
+  if (validDirections.indexOf(games[body.game.id]) >= 0) {
     direction = games[body.game.id];
   } else {
     const direction = bestDirections.length > 0 ? bestDirections[Math.floor(Math.random() * bestDirections.length)] : validDirections[Math.floor(Math.random() * validDirections.length)];
