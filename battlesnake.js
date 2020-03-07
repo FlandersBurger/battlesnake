@@ -64,6 +64,7 @@ router.post('/move', function ({ body }, res, next) {
   console.log(`Best directions: ${bestDirections}`);
   console.log(`Previous direction: ${games[body.game.id]}`);
   console.log(`Chosen direction: ${direction}`);
+  console.log(`Health: ${body.you.health}`);
   games[body.game.id] = direction;
   res.json({
     move: direction,
