@@ -60,17 +60,17 @@ router.post('/move', function ({ body }, res, next) {
       direction = games[body.game.id];
     } else {
       //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-      direction = pickDirection(validDirections, body.you, body.board));
+      direction = pickDirection(validDirections, body.you, body.board);
     }
   } else {
     const random = Math.random() * 100;
     console.log(`Rando! ${random}`);
     if (random < body.you.health || bestDirections.length === 0) {
       //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-      direction = pickDirection(validDirections, body.you, body.board));
+      direction = pickDirection(validDirections, body.you, body.board);
     } else {
       //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
-      direction = pickDirection(bestDirections, body.you, body.board));
+      direction = pickDirection(bestDirections, body.you, body.board);
     }
   }
 
