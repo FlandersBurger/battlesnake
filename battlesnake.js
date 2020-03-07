@@ -106,7 +106,7 @@ const checkSpot = (board, snakes, me, position) => {
     } else if (snake.id !== me.id) {
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
       console.log(`{${position.x}, ${position.y}} -> ${snake.body.length} snake, I'm a ${me.body.length}`);
-      return snake.body.length < me.body.length && head;
+      return (snake.body.length < me.body.length && head) || !head;
     } else {
       return true;
     }
