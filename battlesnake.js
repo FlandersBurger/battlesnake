@@ -50,27 +50,27 @@ router.post('/move', function ({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (body.you.health < 40) {
+  if (body.you.health <= 50) {
     if (bestDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
     } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
       //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
-      direction = pickDirection(bestDirections, body.you);
+      direction = pickDirection(bestDirections, body.you, body.board);
     } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
     } else {
       //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-      direction = pickDirection(validDirections, body.you);
+      direction = pickDirection(validDirections, body.you, body.board));
     }
   } else {
     const random = Math.random() * 100;
     console.log(`Rando! ${random}`);
     if (random < body.you.health || bestDirections.length === 0) {
       //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-      direction = pickDirection(validDirections, body.you);
+      direction = pickDirection(validDirections, body.you, body.board));
     } else {
       //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
-      direction = pickDirection(bestDirections, body.you);
+      direction = pickDirection(bestDirections, body.you, body.board));
     }
   }
 
@@ -99,13 +99,13 @@ const distance = (spot1, spot2) => {
   return Math.abs(spot1.x - spot2.x) + Math.abs(spot1.y - spot2.y)
 };
 
-const pickDirection = (directions, me) => {
+const pickDirection = (directions, me, board) => {
   const head = me.body[0];
   const pieces = {
-    'up': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.y < head.y ? 1 : 0), 0),
-    'down': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.y > head.y ? 1 : 0), 0),
-    'left': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.x < head.x ? 1 : 0), 0),
-    'right': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.x > head.x ? 1 : 0), 0)
+    'up': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.y < head.y ? board.height - Math.abs(piece.y - head.y) : 0), 0),
+    'down': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.y > head.y ? board.height - Math.abs(piece.y - head.y) : 0), 0),
+    'left': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.x < head.x ? board.width - Math.abs(piece.x - head.x) : 0), 0),
+    'right': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.x > head.x ? board.width - Math.abs(piece.x - head.x) : 0), 0)
   };
   return directions.reduce((chosenDirection, direction) => {
     if (pieces[direction] < chosenDirection.pieces) {
