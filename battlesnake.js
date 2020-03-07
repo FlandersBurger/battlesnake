@@ -102,18 +102,13 @@ const distance = (spot1, spot2) => {
 const pickDirection = (directions, me, board) => {
   const head = me.body[0];
   const pieces = {
-    'up': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.y < head.y ? board.height - Math.abs(piece.y - head.y) : 0), 0),
-    'down': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.y > head.y ? board.height - Math.abs(piece.y - head.y) : 0), 0),
-    'left': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.x < head.x ? board.width - Math.abs(piece.x - head.x) : 0), 0),
-    'right': me.body.slice(1, me.body.length).reduce((sum, piece) => sum + (piece.x > head.x ? board.width - Math.abs(piece.x - head.x) : 0), 0)
+    'up': board.height / 2 < me.y,
+    'down': board.height / 2 > me.y,
+    'left': board.width / 2 < me.x,
+    'right': board.width / 2 > me.x
   };
-  return directions.reduce((chosenDirection, direction) => {
-    if (pieces[direction] < chosenDirection.pieces) {
-      chosenDirection.direction = direction;
-      chosenDirection.pieces = pieces[direction];
-    }
-    return chosenDirection;
-  }, { direction: '', pieces: 10000 }).direction;
+  const validDirections = directions.filter(direction => pieces[direction]);
+  return validDirections[Math.floor(Math.random() * validDirections.length)];
 };
 
 const checkSpot = (board, snakes, me, position) => {
