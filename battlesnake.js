@@ -50,14 +50,23 @@ router.post('/move', function ({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (bestDirections.indexOf(games[body.game.id]) >= 0) {
-    direction = games[body.game.id];
-  } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
-    direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
-  } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
-    direction = games[body.game.id];
+  if (body.you.health < 40) {
+    if (bestDirections.indexOf(games[body.game.id]) >= 0) {
+      direction = games[body.game.id];
+    } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
+      direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
+    } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
+      direction = games[body.game.id];
+    } else {
+      direction = validDirections[Math.floor(Math.random() * validDirections.length)];
+    }
   } else {
-    direction = validDirections[Math.floor(Math.random() * validDirections.length)];
+    const random = Math.random() * 100;
+    if (random < body.you.health || bestDirections.length === 0) {
+      direction = validDirections[Math.floor(Math.random() * validDirections.length)];
+    } else {
+      direction = bestDirections[Math.floor(Math.random() * validDirections.length)];
+    }
   }
 
   console.log(`Valid directions: ${validDirections}`);
