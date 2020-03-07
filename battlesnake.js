@@ -9,8 +9,8 @@ router.post('/start', function ({ body }, res, next) {
   console.log(games[body.game.id]);
   res.json({
     color: '#5ECBC2',
-    headType: 'bendr',
-    tailType: 'small-rattle'
+    headType: 'shades',
+    tailType: 'bolt'
   });
 });
 router.post('/move', function ({ body }, res, next) {
