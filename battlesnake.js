@@ -50,9 +50,12 @@ router.post('/move', function ({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (games[body.game.id] && bestDirections.indexOf(games[body.game.id]) >= 0) {
-    direction = games[body.game.id];
-  } else {
+  if (games[body.game.id]) {
+    if ((bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) >= 0) || validDirections.indexOf(games[body.game.id]) >= 0) {
+      direction = games[body.game.id];
+    }
+  }
+  if (!direction) {
     direction = bestDirections.length > 0 ? bestDirections[Math.floor(Math.random() * bestDirections.length)] : validDirections[Math.floor(Math.random() * validDirections.length)];
   }
 
