@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
-app.use('/api/battlesnake', require('./battlesnake'));
+app.use('/', require('./battlesnake'));
 
 const port = process.env.PORT || 3000;
 

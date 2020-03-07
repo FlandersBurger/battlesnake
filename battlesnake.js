@@ -65,6 +65,9 @@ router.post('/end', function (req, res, next) {
 router.post('/ping', function (req, res, next) {
   res.status(200).end();
 });
+router.get('/', function (req, res, next) {
+  res.status(200).send('Success');
+});
 
 const distance = (spot1, spot2) => {
   return Math.abs(spot1.x - spot2.x) + Math.abs(spot1.y - spot2.y)
