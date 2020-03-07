@@ -66,7 +66,7 @@ router.post('/move', function ({ body }, res, next) {
     if (random < body.you.health || bestDirections.length === 0) {
       direction = validDirections[Math.floor(Math.random() * validDirections.length)];
     } else {
-      direction = bestDirections[Math.floor(Math.random() * validDirections.length)];
+      direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
     }
   }
 
