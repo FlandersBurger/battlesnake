@@ -61,10 +61,7 @@ router.post("/move", function({ body }, res, next) {
       checkSpot(board, body.board.snakes, body.you, { x: me.x - 2, y: me.y })
     )
       // validDirections.push("left");
-      validDirections
-        .push("right")
-        .push("right")
-        .push("right");
+      validDirections.push("right", "right", "right");
   }
   if (
     me.y < body.board.width - 1 &&
