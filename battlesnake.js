@@ -50,7 +50,7 @@ router.post('/move', function ({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (body.you.health <= 50) {
+  if (body.you.health <= 70) {
     if (bestDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
     } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
