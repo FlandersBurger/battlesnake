@@ -16,9 +16,9 @@ router.post("/start", function({ body }, res, next) {
 router.post("/move", function({ body }, res, next) {
   const me = body.you.body[0];
   let board = [];
-  for (var i = 0; i < body.board.width + 1; i++) {
+  for (var i = 0; i < body.board.width; i++) {
     board.push([]);
-    for (var j = 0; j < body.board.height + 1; j++) {
+    for (var j = 0; j < body.board.height; j++) {
       board[i].push("empty");
     }
   }
@@ -60,8 +60,7 @@ router.post("/move", function({ body }, res, next) {
       }) &&
       checkSpot(board, body.board.snakes, body.you, { x: me.x - 2, y: me.y })
     )
-      // validDirections.push("left");
-      validDirections.push("right", "right", "right");
+      validDirections.push("left");
   }
   if (
     me.y < body.board.width - 1 &&
@@ -97,7 +96,7 @@ router.post("/move", function({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (body.you.health <= 70) {
+  if (body.you.health <= 50) {
     if (bestDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
     } else if (
