@@ -38,7 +38,7 @@ router.post("/move", function({ body }, res, next) {
     directions.push({ direction: 'up', score: board[me.x][me.y - 1] });
   }
   console.log(directions);
-  const validDirections = directions.map(direction => direction.direction);
+  const validDirections = directions.filter(direction => direction.score > 0).map(direction => direction.direction);
   const bestDirection = directions.reduce((best, direction) => {
     if (best.score < direction.score) {
       best = direction;
