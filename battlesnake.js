@@ -43,6 +43,7 @@ router.post("/move", function({ body }, res, next) {
     if (best.score < direction.score) {
       best = direction;
     }
+    return best;
   }, { score: -50, direction: '' });
   const foodDirections = getClosestFood(body, me);
   let direction;
@@ -195,11 +196,9 @@ const checkSpot = (board, snakes, me, position) => {
       snake => board[position.x][position.y] === snake.id
     );
     if (!snake) {
-      console.log(`what's here? {${position.x}, ${position.y}} -> ${board[position.x][position.y]}`);
       return false;
     } else if (snake.id !== me.id) {
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
-      console.log(`{${position.x}, ${position.y}} -> ${snake.body.length} snake, I'm a ${me.body.length}`);
       return (snake.body.length < me.body.length && head) || !head;
     } else {
       return true;
