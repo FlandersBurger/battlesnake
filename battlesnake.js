@@ -81,6 +81,7 @@ router.post("/move", function({ body }, res, next) {
   }
 
   console.log(`Valid directions: ${validDirections}`);
+  console.log(`Best directions: ${bestDirections}`);
   console.log(`Best Scored direction: ${bestDirection.direction}`);
   console.log(`Previous direction: ${games[body.game.id]}`);
   console.log(`Chosen direction: ${direction}`);
@@ -250,7 +251,7 @@ const scoreSpot = (board, me, position) => {
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
       return head ? me.body.length - snake.body.length - 1 : -3;
     } else {
-      return -5;
+      return -2;
     }
   }
 };
