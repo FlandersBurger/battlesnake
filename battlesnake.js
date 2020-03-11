@@ -24,20 +24,7 @@ router.post("/move", function({ body }, res, next) {
       board[i].push(assessSpot(body.board, body.you, { x: i, y: j }));
     }
   }
-  let directions = [];
   let validDirections = [];
-  if (me.x < body.board.width - 1 && games[body.game.id] !== 'left') {
-    directions.push({ direction: 'right', score: board[me.x + 1][me.y] });
-  }
-  if (me.x > 0 && games[body.game.id] !== 'right') {
-    directions.push({ direction: 'left', score: board[me.x - 1][me.y] });
-  }
-  if (me.y < body.board.width - 1 && games[body.game.id] !== 'up') {
-    directions.push({ direction: 'down', score: board[me.x][me.y + 1] });
-  }
-  if (me.y > 0 && games[body.game.id] !== 'down') {
-    directions.push({ direction: 'up', score: board[me.x][me.y - 1] });
-  }
   if (me.x < body.board.width - 2 && ['food', 'empty'].indexOf(board[me.x + 1][me.y]) >= 0) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 2, y: me.y }))
       validDirections.push('right');
@@ -54,7 +41,22 @@ router.post("/move", function({ body }, res, next) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
       validDirections.push('up');
   }
+
+  let directions = [];
+  if (me.x < body.board.width - 1 && games[body.game.id] !== 'left') {
+    directions.push({ direction: 'right', score: board[me.x + 1][me.y].score });
+  }
+  if (me.x > 0 && games[body.game.id] !== 'right') {
+    directions.push({ direction: 'left', score: board[me.x - 1][me.y].score });
+  }
+  if (me.y < body.board.width - 1 && games[body.game.id] !== 'up') {
+    directions.push({ direction: 'down', score: board[me.x][me.y + 1].score });
+  }
+  if (me.y > 0 && games[body.game.id] !== 'down') {
+    directions.push({ direction: 'up', score: board[me.x][me.y - 1].score });
+  }
   console.log(directions);
+  //const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
   const bestDirection = directions.reduce((best, direction) => {
     if (best.score < direction.score) {
       best = direction;
@@ -199,14 +201,14 @@ const checkSpot = (board, snakes, me, position) => {
     position.y < 0 ||
     position.x >= board.length ||
     position.y >= board[0].length ||
-    ["food", "empty"].indexOf(board[position.x][position.y]) >= 0
+    ["food", "empty"].indexOf(board[position.x][position.y].item) >= 0
   ) {
     return true;
   } else {
     //You can do a head-on collision if the snake is smaller than yours
     const snake = _.find(
       snakes,
-      snake => board[position.x][position.y] === snake.id
+      snake => board[position.x][position.y].item === snake.id
     );
     if (!snake) {
       return false;
@@ -229,7 +231,9 @@ const assessSpot = (board, me, position) => {
   score += scoreSpot(board, me, { x: position.x + 1, y: position.y});
   score += scoreSpot(board, me, { x: position.x + 1, y: position.y + 1});
   score += scoreSpot(board, me, { x: position.x, y: position.y - 1});
-  return score;
+  const snake = _.find(board.snakes, snake => _.some(snake.body, piece => piece.x === position.x && piece.y === position.y));
+  const food = _.find(board.food, piece => piece.x === position.x && piece.y === position.y);
+  return { item: snake ? snake.id : (food ? 'food' : 'empty'), score };
 };
 
 const scoreSpot = (board, me, position) => {
