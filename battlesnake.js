@@ -66,7 +66,6 @@ router.post("/move", function({ body }, res, next) {
 
   console.log(`Valid directions: ${validDirections}`);
   console.log(`Best Scored direction: ${bestDirection}`);
-  console.log(`Best directions: ${bestDirections}`);
   console.log(`Previous direction: ${games[body.game.id]}`);
   console.log(`Chosen direction: ${direction}`);
   games[body.game.id] = direction;
