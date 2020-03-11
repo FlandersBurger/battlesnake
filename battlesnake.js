@@ -31,19 +31,19 @@ router.post('/move', function ({ body }, res, next) {
     });
   });
   let validDirections = [];
-  if (me.x < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x + 1][me.y]) >= 0) {
+  if (me.x < body.board.width - 2 && ['food', 'empty'].indexOf(board[me.x + 1][me.y]) >= 0) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 2, y: me.y }))
       validDirections.push('right');
   }
-  if (me.x > 0 && ['food', 'empty'].indexOf(board[me.x - 1][me.y]) >= 0) {
+  if (me.x > 1 && ['food', 'empty'].indexOf(board[me.x - 1][me.y]) >= 0) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 2, y: me.y }))
       validDirections.push('left');
   }
-  if (me.y < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x][me.y + 1]) >= 0) {
+  if (me.y < body.board.width - 2 && ['food', 'empty'].indexOf(board[me.x][me.y + 1]) >= 0) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y - 2 }))
       validDirections.push('down');
   }
-  if (me.y > 0 && ['food', 'empty'].indexOf(board[me.x][me.y - 1]) >= 0) {
+  if (me.y > 1 && ['food', 'empty'].indexOf(board[me.x][me.y - 1]) >= 0) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
       validDirections.push('up');
   }
@@ -112,7 +112,7 @@ const pickDirection = (directions, me, board) => {
 };
 
 const checkSpot = (board, snakes, me, position) => {
-  if (position.x < 1 || position.y < 1 || position.x >= board.length - 1 || position.y >= board[0].length - 1 || ['food', 'empty'].indexOf(board[position.x][position.y]) >= 0) {
+  if (position.x < 0 || position.y < 0 || position.x >= board.length || position.y >= board[0].length || ['food', 'empty'].indexOf(board[position.x][position.y]) >= 0) {
     return true;
   } else {
     //You can do a head-on collision if the snake is smaller than yours
