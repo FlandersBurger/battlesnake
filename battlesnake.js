@@ -1,4 +1,4 @@
-/*jslint esversion: 10*/
+/*jslint esversion: 6*/
 const router = require("express").Router();
 const _ = require("underscore");
 
@@ -47,6 +47,25 @@ router.post("/move", function({ body }, res, next) {
   if (me.y > 1 && ['food', 'empty'].indexOf(board[me.x][me.y - 1]) >= 0) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
       validDirections.push('up');
+  }
+  if (validDirections.length === 0) {
+    if (me.x === body.board.width - 2) {
+      validDirections.push('right');
+    } else if (me.x === 1) {
+      validDirections.push('left');
+    } else if (me.y === body.board.height - 2) {
+      validDirections.push('down');
+    } else if (me.y === 1) {
+      validDirections.push('up');
+    } else if (me.x === body.board.width - 1) {
+      validDirections.push('left');
+    } else if (me.x === 0) {
+      validDirections.push('right');
+    } else if (me.y === body.board.height - 1) {
+      validDirections.push('up');
+    } else if (me.y === 0) {
+      validDirections.push('down');
+    }
   }
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
