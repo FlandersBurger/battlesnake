@@ -24,6 +24,7 @@ router.post("/move", function({ body }, res, next) {
       board[i].push(assessSpot(body.board, body.you, { x: i, y: j }));
     }
   }
+  console.log(board);
   let directions = [
     { direction: 'left', score: board[me.x - 1][me.y] },
     { direction: 'down', score: board[me.x][me.y + 1] },
