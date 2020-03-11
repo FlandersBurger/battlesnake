@@ -50,7 +50,7 @@ router.post("/move", function({ body }, res, next) {
   if (foodDirections.indexOf(bestDirection.direction) >= 0 || bestDirection.direction) {
     direction = bestDirection.direction;
   } else {
-    const bestDirections = _.intersection(validDirections, foodDirection);
+    const bestDirections = _.intersection(validDirections, foodDirections);
     if (bestDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
     } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
