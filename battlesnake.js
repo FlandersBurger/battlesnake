@@ -70,13 +70,10 @@ router.post("/move", function({ body }, res, next) {
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
   let direction;
-  if (body.you.health <= 50) {
+  //if (body.you.health <= 50) {
     if (bestDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
-    } else if (
-      bestDirections.length > 0 &&
-      bestDirections.indexOf(games[body.game.id]) < 0
-    ) {
+    } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
       //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
       direction = pickDirection(bestDirections, body.you, body.board);
     } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
@@ -84,7 +81,7 @@ router.post("/move", function({ body }, res, next) {
     } else {
       //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
       direction = pickDirection(validDirections, body.you, body.board);
-    }
+    }/*
   } else {
     const random = Math.random() * 100;
     console.log(`Rando! ${random}`);
@@ -95,7 +92,7 @@ router.post("/move", function({ body }, res, next) {
       //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
       direction = pickDirection(bestDirections, body.you, body.board);
     }
-  }
+  }*/
 
   console.log(`Valid directions: ${validDirections}`);
   console.log(`Best directions: ${bestDirections}`);
@@ -156,23 +153,20 @@ const checkSpot = (board, snakes, me, position) => {
       snake => board[position.x][position.y] === snake.id
     );
     if (!snake) {
-      console.log(
-        `what's here? {${position.x}, ${position.y}} -> ${
-          board[position.x][position.y]
-        }`
-      );
+      console.log(`what's here? {${position.x}, ${position.y}} -> ${board[position.x][position.y]}`);
       return false;
     } else if (snake.id !== me.id) {
-      const head =
-        position.x === snake.body[0].x && position.y === snake.body[0].y;
-      console.log(
-        `{${position.x}, ${position.y}} -> ${snake.body.length} snake, I'm a ${me.body.length}`
-      );
+      const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
+      console.log(`{${position.x}, ${position.y}} -> ${snake.body.length} snake, I'm a ${me.body.length}`);
       return (snake.body.length < me.body.length && head) || !head;
     } else {
       return true;
     }
   }
+};
+
+const assessSpace = (board, snakes, me, position) => {
+
 };
 
 const getClosestFood = (body, position) => {
