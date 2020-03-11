@@ -25,6 +25,7 @@ router.post("/move", function({ body }, res, next) {
     }
   }
   let directions = [];
+  let validDirections = [];
   if (me.x < body.board.width - 1 && games[body.game.id] !== 'left') {
     directions.push({ direction: 'right', score: board[me.x + 1][me.y] });
   }
