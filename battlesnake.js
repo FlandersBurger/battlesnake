@@ -2,7 +2,7 @@
 const router = require("express").Router();
 const _ = require("underscore");
 
-console.log('---> V3 <----');
+console.log('---> V4 <----');
 let games = {};
 
 
@@ -33,7 +33,7 @@ router.post("/move", function({ body }, res, next) {
   const validDirections = directions.filter(direction => {
     return direction.score >= 0;
   });
-  const bestDirection = validDirections.reduce((best, direction) => {
+  const bestDirection = directions.reduce((best, direction) => {
     if (best.score < direction.score) {
       best = direction;
     }
