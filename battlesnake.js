@@ -223,7 +223,7 @@ const scoreSpot = (board, me, position) => {
   if (_.some(board.food, food => food.x === position.x && food.y === position.y)) {
     return 2;
   } else {
-    const snake = _.find(snakes, snake => board[position.x][position.y] === snake.id);
+    const snake = _.find(board.snakes, snake => _.some(snake.body, piece => piece.x === position.x && piece.y === position.y));
     if (!snake) {
       return 1;
     } else if (snake.id !== me.id) {
