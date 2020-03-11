@@ -24,29 +24,32 @@ router.post("/move", function({ body }, res, next) {
       board[i].push(assessSpot(body.board, body.you, { x: i, y: j }));
     }
   }
-  console.log(board);
-  let directions = [
-    { direction: 'left', score: board[me.x - 1][me.y] },
-    { direction: 'down', score: board[me.x][me.y + 1] },
-    { direction: 'right', score: board[me.x + 1][me.y] },
-    { direction: 'up', score: board[me.x][me.y - 1] },
-  ];
-  const validDirections = directions.filter(direction => {
-    return direction.score >= 0;
-  });
+  let directions = [];
+  if (me.x < body.board.width - 1) {
+    directions.push({ direction: 'right', score: board[me.x + 1][me.y] });
+  }
+  if (me.x > 0) {
+    directions.push({ direction: 'left', score: board[me.x - 1][me.y] });
+  }
+  if (me.y < body.board.width - 1) {
+    directions.push({ direction: 'down', score: board[me.x][me.y + 1] });
+  }
+  if (me.y > 0) {
+    directions.push({ direction: 'up', score: board[me.x][me.y - 1] });
+  }
+  console.log(directions);
+  const validDirections = directions.map(direction => direction.direction);
   const bestDirection = directions.reduce((best, direction) => {
     if (best.score < direction.score) {
       best = direction;
     }
-  }, { score: -50, direction: '' }).direction;
-  const foodDirection = getClosestFood(body, me);
+  }, { score: -50, direction: '' });
+  const foodDirections = getClosestFood(body, me);
   let direction;
-  if (foodDirection === bestDirection) {
-    direction = foodDirection;
-  } else if (bestDirection) {
-    direction = bestDirection;
+  if (foodDirections.indexOf(bestDirection.direction) >= 0 || bestDirection.direction) {
+    direction = bestDirection.direction;
   } else {
-    const bestDirections = _.intersection(validDirections, foodDirections);
+    const bestDirections = _.intersection(validDirections, foodDirection);
     if (bestDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
     } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
@@ -219,7 +222,7 @@ const assessSpot = (board, me, position) => {
 
 const scoreSpot = (board, me, position) => {
   if (position.x < 0 || position.y < 0 || position.x >= board.width || position.y >= board.height) {
-    return 0;
+    return -1;
   }
   if (_.some(board.food, food => food.x === position.x && food.y === position.y)) {
     return 2;
