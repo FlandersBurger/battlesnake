@@ -2,7 +2,7 @@
 const router = require('express').Router();
 const _ = require('underscore');
 
-console.log('---> V1 <----');
+console.log('---> V2 <----');
 let games = {};
 
 router.post('/start', function ({ body }, res, next) {
