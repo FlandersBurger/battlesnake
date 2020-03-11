@@ -25,16 +25,16 @@ router.post("/move", function({ body }, res, next) {
     }
   }
   let directions = [];
-  if (me.x < body.board.width - 1) {
+  if (me.x < body.board.width - 1 && games[body.game.id] !== 'left') {
     directions.push({ direction: 'right', score: board[me.x + 1][me.y] });
   }
-  if (me.x > 0) {
+  if (me.x > 0 && games[body.game.id] !== 'right') {
     directions.push({ direction: 'left', score: board[me.x - 1][me.y] });
   }
-  if (me.y < body.board.width - 1) {
+  if (me.y < body.board.width - 1 && games[body.game.id] !== 'up') {
     directions.push({ direction: 'down', score: board[me.x][me.y + 1] });
   }
-  if (me.y > 0) {
+  if (me.y > 0 && games[body.game.id] !== 'down') {
     directions.push({ direction: 'up', score: board[me.x][me.y - 1] });
   }
   console.log(directions);
