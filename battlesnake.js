@@ -2,8 +2,9 @@
 const router = require("express").Router();
 const _ = require("underscore");
 
-console.log('---> V2 <----');
+console.log('---> V3 <----');
 let games = {};
+
 
 router.post("/start", function({ body }, res, next) {
   games[body.game.id] = body;
@@ -20,18 +21,56 @@ router.post("/move", function({ body }, res, next) {
   for (var i = 0; i < body.board.width; i++) {
     board.push([]);
     for (var j = 0; j < body.board.height; j++) {
-      board[i].push("empty");
+      board[i].push(assessSpot(body.board, body.you, { x: i, y: j }));
     }
   }
-  body.board.food.forEach(position => {
-    board[position.x][position.y] = "food";
+  let directions = [
+    { direction: 'left', score: board[me.x - 1][me.y] },
+    { direction: 'down', score: board[me.x][me.y + 1] },
+    { direction: 'right', score: board[me.x + 1][me.y] },
+    { direction: 'up', score: board[me.x][me.y - 1] },
+  ];
+  const validDirections = directions.filter(direction => {
+    return direction.score >= 0;
   });
-  body.board.snakes.forEach(snake => {
-    snake.body.forEach(position => {
-      board[position.x][position.y] = snake.id;
-    });
+  const bestDirection = validDirections.reduce((best, direction) => {
+    if (best.score < direction.score) {
+      best = direction;
+    }
+  }, { score: -50, direction: '' }).direction;
+  const foodDirection = getClosestFood(body, me);
+  let direction;
+  if (foodDirection === bestDirection) {
+    direction = foodDirection;
+  } else if (bestDirection) {
+    direction = bestDirection;
+  } else {
+    const bestDirections = _.intersection(validDirections, foodDirections);
+    if (bestDirections.indexOf(games[body.game.id]) >= 0) {
+      direction = games[body.game.id];
+    } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
+      //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
+      direction = pickDirection(bestDirections, body.you, body.board);
+    } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
+      direction = games[body.game.id];
+    } else {
+      //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
+      direction = pickDirection(validDirections, body.you, body.board);
+    }
+  }
+
+  console.log(`Valid directions: ${validDirections}`);
+  console.log(`Best Scored direction: ${bestDirection}`);
+  console.log(`Best directions: ${bestDirections}`);
+  console.log(`Previous direction: ${games[body.game.id]}`);
+  console.log(`Chosen direction: ${direction}`);
+  games[body.game.id] = direction;
+  res.json({
+    move: direction,
+    shout: "Moving!"
   });
-  let validDirections = [];
+
+  /*
   if (me.x < body.board.width - 2 && ['food', 'empty'].indexOf(board[me.x + 1][me.y]) >= 0) {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 2, y: me.y }))
       validDirections.push('right');
@@ -69,8 +108,7 @@ router.post("/move", function({ body }, res, next) {
   }
   const foodDirections = getClosestFood(body, me);
   const bestDirections = _.intersection(validDirections, foodDirections);
-  let direction;
-  //if (body.you.health <= 50) {
+  if (body.you.health <= 50) {
     if (bestDirections.indexOf(games[body.game.id]) >= 0) {
       direction = games[body.game.id];
     } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
@@ -81,7 +119,7 @@ router.post("/move", function({ body }, res, next) {
     } else {
       //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
       direction = pickDirection(validDirections, body.you, body.board);
-    }/*
+    }
   } else {
     const random = Math.random() * 100;
     console.log(`Rando! ${random}`);
@@ -92,7 +130,7 @@ router.post("/move", function({ body }, res, next) {
       //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
       direction = pickDirection(bestDirections, body.you, body.board);
     }
-  }*/
+  }
 
   console.log(`Valid directions: ${validDirections}`);
   console.log(`Best directions: ${bestDirections}`);
@@ -103,7 +141,7 @@ router.post("/move", function({ body }, res, next) {
   res.json({
     move: direction,
     shout: "Moving!"
-  });
+  });*/
 });
 router.post("/end", function(req, res, next) {
   res.status(200).end();
@@ -165,8 +203,37 @@ const checkSpot = (board, snakes, me, position) => {
   }
 };
 
-const assessSpace = (board, snakes, me, position) => {
+const assessSpot = (board, me, position) => {
+  let score = 0;
+  score += scoreSpot(board, me, { x: position.x - 1, y: position.y - 1});
+  score += scoreSpot(board, me, { x: position.x - 1, y: position.y});
+  score += scoreSpot(board, me, { x: position.x - 1, y: position.y + 1});
+  score += scoreSpot(board, me, { x: position.x, y: position.y + 1});
+  score += scoreSpot(board, me, { x: position.x + 1, y: position.y - 1});
+  score += scoreSpot(board, me, { x: position.x + 1, y: position.y});
+  score += scoreSpot(board, me, { x: position.x + 1, y: position.y + 1});
+  score += scoreSpot(board, me, { x: position.x, y: position.y - 1});
+  return score;
+};
 
+const scoreSpot = (board, me, position) => {
+  if (position.x < 0 || position.y < 0 || position.x >= board.width || position.y >= board.height) {
+    return 0;
+  }
+  if (_.some(board.food, food => food.x === position.x && food.y === position.y)) {
+    return 2;
+  } else {
+    const snake = _.find(snakes, snake => board[position.x][position.y] === snake.id);
+    if (!snake) {
+      return 1;
+    } else if (snake.id !== me.id) {
+      const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
+      console.log(`{${position.x}, ${position.y}} -> ${snake.body.length} snake, I'm a ${me.body.length}`);
+      return head ? me.body.length - snake.body.length - 1 : -3;
+    } else {
+      return -1;
+    }
+  }
 };
 
 const getClosestFood = (body, position) => {
