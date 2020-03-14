@@ -75,6 +75,8 @@ router.post("/move", function({ body }, res, next) {
     direction = bestDirection.direction;
   } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
     direction = games[body.game.id];
+  } else if (foodDirections.indexOf(bestDirection.direction) >= 0 || bestDirection.direction) {
+    direction = bestDirection.direction;
   } else {
     //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
     direction = pickDirection(validDirections, body.you, body.board);
@@ -181,19 +183,15 @@ const distance = (spot1, spot2) => {
 const pickDirection = (directions, me, board) => {
   const head = me.body[0];
   const pieces = {
-    up: board.height / 2 < me.y,
-    down: board.height / 2 > me.y,
-    left: board.width / 2 < me.x,
-    right: board.width / 2 > me.x
+    up: board.height / 2 < head.y,
+    down: board.height / 2 > head.y,
+    left: board.width / 2 < head.x,
+    right: board.width / 2 > head.x
   };
   const recommendedDirections = directions.filter(
     direction => pieces[direction]
   );
-  return recommendedDirections.length > 0
-    ? recommendedDirections[
-        Math.floor(Math.random() * recommendedDirections.length)
-      ]
-    : directions[Math.floor(Math.random() * directions.length)];
+  return recommendedDirections.length > 0 ? recommendedDirections[Math.floor(Math.random() * recommendedDirections.length)] : directions[Math.floor(Math.random() * directions.length)];
 };
 
 const checkSpot = (board, snakes, me, position) => {
