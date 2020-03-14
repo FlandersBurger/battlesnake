@@ -87,14 +87,23 @@ router.post("/move", function({ body }, res, next) {
   } else if (validDirections.indexOf(highScoreDirection.direction) >= 0) {
     console.log('Valid Directions includes High Score Direction');
     direction = highScoreDirection.direction;
-  } else {
+  } else if (validDirections.length > 0) {
     console.log('There are Valid Directions, pick one');
     //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
     direction = pickDirection(validDirections, body.you, body.board);
+  } else {
+    console.log('Fuck it, go into the worst direction');
+    direction = directions.reduce((worst, direction) => {
+      if (worst.score > direction.score) {
+        worst = direction;
+      }
+      return worst;
+    }, { score: 50, direction: '' }).direction;
   }
 
   console.log(`Valid directions: ${validDirections}`);
   console.log(`Best directions: ${bestDirections}`);
+  console.log(`Food directions: ${foodDirections}`);
   console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
   console.log(`Previous direction: ${games[body.game.id]}`);
   console.log(`Chosen direction: ${direction}`);
