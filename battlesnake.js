@@ -71,10 +71,10 @@ router.post("/move", function({ body }, res, next) {
   } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
     //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
     direction = pickDirection(bestDirections, body.you, body.board);
+  } else if (validDirections.indexOf(bestDirection.direction) >= 0) {
+    direction = bestDirection.direction;
   } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
     direction = games[body.game.id];
-  } else if (foodDirections.indexOf(bestDirection.direction) >= 0 || bestDirection.direction) {
-    direction = bestDirection.direction;
   } else {
     //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
     direction = pickDirection(validDirections, body.you, body.board);
