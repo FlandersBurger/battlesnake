@@ -78,7 +78,7 @@ router.post("/move", function({ body }, res, next) {
   } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
     console.log('Valid Directions includes Previous Direction');
     direction = games[body.game.id];
-  } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
+  } else if (bestDirections.length > 0) {
     console.log('There are Best Directions, pick one');
     direction = pickDirection(bestDirections, body.you, body.board);
   } else {
@@ -89,7 +89,7 @@ router.post("/move", function({ body }, res, next) {
 
   console.log(`Valid directions: ${validDirections}`);
   console.log(`Best directions: ${bestDirections}`);
-  console.log(`Best Scored direction: ${bestDirection.direction}`);
+  console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
   console.log(`Previous direction: ${games[body.game.id]}`);
   console.log(`Chosen direction: ${direction}`);
   games[body.game.id] = direction;
