@@ -249,9 +249,9 @@ const scoreSpot = (board, me, position) => {
       return 1;
     } else if (snake.id !== me.id) {
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
-      return head ? me.body.length - snake.body.length - 1 : -3;
+      return head ? me.body.length - snake.body.length - 1 : 0;
     } else {
-      return -2;
+      return 0;
     }
   }
 };
