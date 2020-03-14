@@ -25,19 +25,19 @@ router.post("/move", function({ body }, res, next) {
     }
   }
   let validDirections = [];
-  if (me.x < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x + 1][me.y].item) >= 0) {
+  if (me.x < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x + 1][me.y].item) >= 0 && games[body.game.id] !== 'left') {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 2, y: me.y }))
       validDirections.push('right');
   }
-  if (me.x > 0 && ['food', 'empty'].indexOf(board[me.x - 1][me.y].item) >= 0) {
+  if (me.x > 0 && ['food', 'empty'].indexOf(board[me.x - 1][me.y].item) >= 0 && games[body.game.id] !== 'right') {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 2, y: me.y }))
       validDirections.push('left');
   }
-  if (me.y < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x][me.y + 1].item) >= 0) {
+  if (me.y < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x][me.y + 1].item) >= 0 && games[body.game.id] !== 'up') {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
       validDirections.push('down');
   }
-  if (me.y > 0 && ['food', 'empty'].indexOf(board[me.x][me.y - 1].item) >= 0) {
+  if (me.y > 0 && ['food', 'empty'].indexOf(board[me.x][me.y - 1].item) >= 0 && games[body.game.id] !== 'down') {
     if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y - 2 }))
       validDirections.push('up');
   }
