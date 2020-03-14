@@ -34,11 +34,11 @@ router.post("/move", function({ body }, res, next) {
       validDirections.push('left');
   }
   if (me.y < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x][me.y + 1].item) >= 0) {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y - 2 }))
+    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
       validDirections.push('down');
   }
   if (me.y > 0 && ['food', 'empty'].indexOf(board[me.x][me.y - 1].item) >= 0) {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
+    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y - 2 }))
       validDirections.push('up');
   }
 
