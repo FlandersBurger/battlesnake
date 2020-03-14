@@ -43,23 +43,24 @@ router.post("/move", function({ body }, res, next) {
   }
 
   let directions = [];
+  /*
   directions.push({ direction: 'right', score: board[me.x + 1][me.y].score });
   directions.push({ direction: 'left', score: board[me.x - 1][me.y].score });
   directions.push({ direction: 'down', score: board[me.x][me.y + 1].score });
   directions.push({ direction: 'up', score: board[me.x][me.y - 1].score });
-  /*
-  if (me.x < body.board.width - 1 && games[body.game.id] !== 'left') {
+  */
+  if (me.x < body.board.width - 1) {
     directions.push({ direction: 'right', score: board[me.x + 1][me.y].score });
   }
-  if (me.x > 0 && games[body.game.id] !== 'right') {
+  if (me.x > 0) {
     directions.push({ direction: 'left', score: board[me.x - 1][me.y].score });
   }
-  if (me.y < body.board.width - 1 && games[body.game.id] !== 'up') {
+  if (me.y < body.board.width - 1) {
     directions.push({ direction: 'down', score: board[me.x][me.y + 1].score });
   }
-  if (me.y > 0 && games[body.game.id] !== 'down') {
+  if (me.y > 0) {
     directions.push({ direction: 'up', score: board[me.x][me.y - 1].score });
-  }*/
+  }
   console.log(directions);
   //const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
   const highScoreDirection = directions.reduce((best, direction) => {
