@@ -165,12 +165,13 @@ router.post("/move", function({
     }
   */
   direction = highScoreDirection.direction;
-  console.log(`Valid directions: ${validDirections}`);
-  console.log(`Best directions: ${bestDirections}`);
-  console.log(`Food directions: ${foodDirections}`);
-  console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
-  console.log(`Previous direction: ${games[body.game.id]}`);
-  console.log(`Chosen direction: ${direction}`);
+  /*
+    console.log(`Valid directions: ${validDirections}`);
+    console.log(`Best directions: ${bestDirections}`);
+    console.log(`Food directions: ${foodDirections}`);
+    console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
+    console.log(`Previous direction: ${games[body.game.id]}`);
+    console.log(`Chosen direction: ${direction}`);*/
   games[body.game.id] = direction;
   res.json({
     move: direction,
