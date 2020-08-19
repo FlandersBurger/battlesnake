@@ -355,6 +355,8 @@ const scoreSpot = (board, me, position) => {
   }
   if (_.some(board.food, food => food.x === position.x && food.y === position.y)) {
     return 2;
+  } else if (_.some(board.hazards, hazard => hazard.x === position.x && hazard.y === position.y)) {
+    return -1;
   } else {
     const snake = _.find(board.snakes, snake => _.some(snake.body, piece => piece.x === position.x && piece.y === position.y));
     if (!snake) {
