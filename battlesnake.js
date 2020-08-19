@@ -310,6 +310,10 @@ const checkSpot = (board, snakes, me, position) => {
 const assessSpot = (board, me, position) => {
   let score = 0;
   score += scoreSpot(board, me, {
+    x: position.x,
+    y: position.y
+  });
+  score += scoreSpot(board, me, {
     x: position.x - 1,
     y: position.y - 1
   });
@@ -349,23 +353,30 @@ const assessSpot = (board, me, position) => {
   };
 };
 
+const EMPTY = 0;
+const WALL = -2;
+const FOOD = 1;
+const HAZARD = -1;
+const SNAKE_BODY = -2;
+
 const scoreSpot = (board, me, position) => {
   if (position.x < 0 || position.y < 0 || position.x >= board.width || position.y >= board.height) {
-    return -1;
+    return WALL;
   }
   if (_.some(board.food, food => food.x === position.x && food.y === position.y)) {
-    return 2;
+    return FOOD;
   } else if (_.some(board.hazards, hazard => hazard.x === position.x && hazard.y === position.y)) {
-    return -1;
+    return HAZARD;
   } else {
     const snake = _.find(board.snakes, snake => _.some(snake.body, piece => piece.x === position.x && piece.y === position.y));
     if (!snake) {
-      return 1;
+      return EMPTY;
     } else if (snake.id !== me.id) {
+      //Snake size calculation
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
-      return head ? me.body.length - snake.body.length - 1 : 0;
+      return head ? me.body.length - snake.body.length - 1 : SNAKE_BODY;
     } else if (snake.id === me.id) {
-      return -1;
+      return SNAKE_BODY;
     } else {
       return 0;
     }
