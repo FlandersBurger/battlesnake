@@ -314,7 +314,7 @@ const assessSpot = (board, me, position) => {
   score += scoreSpot(board, me, {
     x: position.x,
     y: position.y
-  }, 1);
+  }, 2);
   score += scoreSpot(board, me, {
     x: position.x - 1,
     y: position.y - 1
