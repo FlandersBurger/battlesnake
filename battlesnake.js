@@ -378,7 +378,7 @@ const scoreSpot = (board, me, position) => {
     } else if (snake.id !== me.id) {
       //Snake size calculation
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
-      return head ? me.body.length - snake.body.length - 1 : SNAKE_BODY;
+      return head ? me.body.length - snake.body.length - 2 : SNAKE_BODY;
     } else if (snake.id === me.id) {
       return MY_BODY;
     } else {
