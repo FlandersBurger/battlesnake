@@ -6,7 +6,9 @@ console.log('---> V5 <----');
 let games = {};
 
 
-router.post("/start", function({ body }, res, next) {
+router.post("/start", function({
+  body
+}, res, next) {
   games[body.game.id] = body;
   console.log(games[body.game.id]);
   res.json({
@@ -15,30 +17,72 @@ router.post("/start", function({ body }, res, next) {
     tailType: "freckled"
   });
 });
-router.post("/move", function({ body }, res, next) {
+
+router.post("/move", function({
+  body
+}, res, next) {
   const me = body.you.body[0];
   let board = [];
   for (var i = 0; i < body.board.width; i++) {
     board.push([]);
     for (var j = 0; j < body.board.height; j++) {
-      board[i].push(assessSpot(body.board, body.you, { x: i, y: j }));
+      board[i].push(assessSpot(body.board, body.you, {
+        x: i,
+        y: j
+      }));
     }
   }
   let validDirections = [];
   if (me.x < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x + 1][me.y].item) >= 0 && games[body.game.id] !== 'left') {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 2, y: me.y }))
+    if (checkSpot(board, body.board.snakes, body.you, {
+        x: me.x + 1,
+        y: me.y - 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x + 1,
+        y: me.y + 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x + 2,
+        y: me.y
+      }))
       validDirections.push('right');
   }
   if (me.x > 0 && ['food', 'empty'].indexOf(board[me.x - 1][me.y].item) >= 0 && games[body.game.id] !== 'right') {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 2, y: me.y }))
+    if (checkSpot(board, body.board.snakes, body.you, {
+        x: me.x - 1,
+        y: me.y - 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x - 1,
+        y: me.y + 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x - 2,
+        y: me.y
+      }))
       validDirections.push('left');
   }
   if (me.y < body.board.width - 1 && ['food', 'empty'].indexOf(board[me.x][me.y + 1].item) >= 0 && games[body.game.id] !== 'up') {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
+    if (checkSpot(board, body.board.snakes, body.you, {
+        x: me.x - 1,
+        y: me.y + 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x + 1,
+        y: me.y + 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x,
+        y: me.y + 2
+      }))
       validDirections.push('down');
   }
   if (me.y > 0 && ['food', 'empty'].indexOf(board[me.x][me.y - 1].item) >= 0 && games[body.game.id] !== 'down') {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y - 2 }))
+    if (checkSpot(board, body.board.snakes, body.you, {
+        x: me.x - 1,
+        y: me.y - 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x + 1,
+        y: me.y - 1
+      }) && checkSpot(board, body.board.snakes, body.you, {
+        x: me.x,
+        y: me.y - 2
+      }))
       validDirections.push('up');
   }
 
@@ -50,16 +94,28 @@ router.post("/move", function({ body }, res, next) {
   directions.push({ direction: 'up', score: board[me.x][me.y - 1].score });
   */
   if (me.x < body.board.width - 1) {
-    directions.push({ direction: 'right', score: board[me.x + 1][me.y].score });
+    directions.push({
+      direction: 'right',
+      score: board[me.x + 1][me.y].score
+    });
   }
   if (me.x > 0) {
-    directions.push({ direction: 'left', score: board[me.x - 1][me.y].score });
+    directions.push({
+      direction: 'left',
+      score: board[me.x - 1][me.y].score
+    });
   }
   if (me.y < body.board.width - 1) {
-    directions.push({ direction: 'down', score: board[me.x][me.y + 1].score });
+    directions.push({
+      direction: 'down',
+      score: board[me.x][me.y + 1].score
+    });
   }
   if (me.y > 0) {
-    directions.push({ direction: 'up', score: board[me.x][me.y - 1].score });
+    directions.push({
+      direction: 'up',
+      score: board[me.x][me.y - 1].score
+    });
   }
   console.log(directions);
   //const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
@@ -68,7 +124,10 @@ router.post("/move", function({ body }, res, next) {
       best = direction;
     }
     return best;
-  }, { score: -50, direction: '' });
+  }, {
+    score: -50,
+    direction: ''
+  });
   const foodDirections = getClosestFood(body, me);
   let direction;
   const bestDirections = _.intersection(validDirections, foodDirections);
@@ -98,7 +157,10 @@ router.post("/move", function({ body }, res, next) {
         worst = direction;
       }
       return worst;
-    }, { score: 50, direction: '' }).direction;
+    }, {
+      score: 50,
+      direction: ''
+    }).direction;
   }
 
   console.log(`Valid directions: ${validDirections}`);
@@ -193,7 +255,13 @@ router.post("/ping", function(req, res, next) {
   res.status(200).end();
 });
 router.get("/", function(req, res, next) {
-  res.status(200).send("Success");
+  res.json({
+    apiversion: 1,
+    //author: "FlandersBurger",
+    color: "#5ECBC2",
+    headType: "silly",
+    tailType: "freckled"
+  });
 });
 
 const distance = (spot1, spot2) => {
@@ -219,8 +287,7 @@ const checkSpot = (board, snakes, me, position) => {
     position.x < 0 ||
     position.y < 0 ||
     position.x >= board.length ||
-    position.y >= board[0].length ||
-    ["food", "empty"].indexOf(board[position.x][position.y].item) >= 0
+    position.y >= board[0].length || ["food", "empty"].indexOf(board[position.x][position.y].item) >= 0
   ) {
     return true;
   } else {
@@ -242,17 +309,44 @@ const checkSpot = (board, snakes, me, position) => {
 
 const assessSpot = (board, me, position) => {
   let score = 0;
-  score += scoreSpot(board, me, { x: position.x - 1, y: position.y - 1});
-  score += scoreSpot(board, me, { x: position.x - 1, y: position.y});
-  score += scoreSpot(board, me, { x: position.x - 1, y: position.y + 1});
-  score += scoreSpot(board, me, { x: position.x, y: position.y + 1});
-  score += scoreSpot(board, me, { x: position.x + 1, y: position.y - 1});
-  score += scoreSpot(board, me, { x: position.x + 1, y: position.y});
-  score += scoreSpot(board, me, { x: position.x + 1, y: position.y + 1});
-  score += scoreSpot(board, me, { x: position.x, y: position.y - 1});
+  score += scoreSpot(board, me, {
+    x: position.x - 1,
+    y: position.y - 1
+  });
+  score += scoreSpot(board, me, {
+    x: position.x - 1,
+    y: position.y
+  });
+  score += scoreSpot(board, me, {
+    x: position.x - 1,
+    y: position.y + 1
+  });
+  score += scoreSpot(board, me, {
+    x: position.x,
+    y: position.y + 1
+  });
+  score += scoreSpot(board, me, {
+    x: position.x + 1,
+    y: position.y - 1
+  });
+  score += scoreSpot(board, me, {
+    x: position.x + 1,
+    y: position.y
+  });
+  score += scoreSpot(board, me, {
+    x: position.x + 1,
+    y: position.y + 1
+  });
+  score += scoreSpot(board, me, {
+    x: position.x,
+    y: position.y - 1
+  });
   const snake = _.find(board.snakes, snake => _.some(snake.body, piece => piece.x === position.x && piece.y === position.y));
   const food = _.find(board.food, piece => piece.x === position.x && piece.y === position.y);
-  return { item: snake ? snake.id : (food ? 'food' : 'empty'), score };
+  return {
+    item: snake ? snake.id : (food ? 'food' : 'empty'),
+    score
+  };
 };
 
 const scoreSpot = (board, me, position) => {
@@ -268,6 +362,8 @@ const scoreSpot = (board, me, position) => {
     } else if (snake.id !== me.id) {
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
       return head ? me.body.length - snake.body.length - 1 : 0;
+    } else if (snake.id === me.id) {
+      return -1;
     } else {
       return 0;
     }
@@ -285,8 +381,10 @@ const getClosestFood = (body, position) => {
         closest.y = crumb.y;
       }
       return closest;
-    },
-    { x: body.board.width, y: body.board.height }
+    }, {
+      x: body.board.width,
+      y: body.board.height
+    }
   );
   let directions = [];
   if (food.x < position.x) {
