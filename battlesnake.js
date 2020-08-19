@@ -357,11 +357,11 @@ const assessSpot = (board, me, position) => {
 };
 
 const EMPTY = 0;
-const WALL = -2;
+const WALL = -1;
 const FOOD = 2;
 const HAZARD = -1;
 const SNAKE_BODY = -2;
-const MY_BODY = -3;
+const MY_BODY = -4;
 
 const scoreSpot = (board, me, position) => {
   if (position.x < 0 || position.y < 0 || position.x >= board.width || position.y >= board.height) {
