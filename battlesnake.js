@@ -314,39 +314,39 @@ const assessSpot = (board, me, position) => {
   score += scoreSpot(board, me, {
     x: position.x,
     y: position.y
-  }, 2);
+  }, me.health < 50 ? 4 : 2);
   score += scoreSpot(board, me, {
     x: position.x - 1,
     y: position.y - 1
-  });
+  }, me.health < 50 ? 1 : 0);
   score += scoreSpot(board, me, {
     x: position.x - 1,
     y: position.y
-  });
+  }, me.health < 50 ? 1 : 0);
   score += scoreSpot(board, me, {
     x: position.x - 1,
     y: position.y + 1
-  });
+  }, me.health < 50 ? 1 : 0);
   score += scoreSpot(board, me, {
     x: position.x,
     y: position.y + 1
-  });
+  }, me.health < 50 ? 1 : 0);
   score += scoreSpot(board, me, {
     x: position.x + 1,
     y: position.y - 1
-  });
+  }, me.health < 50 ? 1 : 0);
   score += scoreSpot(board, me, {
     x: position.x + 1,
     y: position.y
-  });
+  }, me.health < 50 ? 1 : 0);
   score += scoreSpot(board, me, {
     x: position.x + 1,
     y: position.y + 1
-  });
+  }, me.health < 50 ? 1 : 0);
   score += scoreSpot(board, me, {
     x: position.x,
     y: position.y - 1
-  });
+  }, me.health < 50 ? 1 : 0);
   const snake = _.find(board.snakes, snake => _.some(snake.body, piece => piece.x === position.x && piece.y === position.y));
   const food = _.find(board.food, piece => piece.x === position.x && piece.y === position.y);
   return {
