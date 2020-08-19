@@ -314,7 +314,7 @@ const assessSpot = (board, me, position) => {
   score += scoreSpot(board, me, {
     x: position.x,
     y: position.y
-  });
+  }, 1);
   score += scoreSpot(board, me, {
     x: position.x - 1,
     y: position.y - 1
@@ -357,17 +357,17 @@ const assessSpot = (board, me, position) => {
 
 const EMPTY = 0;
 const WALL = -1;
-const FOOD = 4;
+const FOOD = 3;
 const HAZARD = -1;
 const SNAKE_BODY = -2;
 const MY_BODY = -2;
 
-const scoreSpot = (board, me, position) => {
+const scoreSpot = (board, me, position, modifier = 0) => {
   if (position.x < 0 || position.y < 0 || position.x >= board.width || position.y >= board.height) {
     return WALL;
   }
   if (_.some(board.food, food => food.x === position.x && food.y === position.y)) {
-    return FOOD;
+    return FOOD + modifier;
   } else if (_.some(board.hazards, hazard => hazard.x === position.x && hazard.y === position.y)) {
     return HAZARD;
   } else {
