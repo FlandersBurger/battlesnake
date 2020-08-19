@@ -119,7 +119,7 @@ router.post("/move", function({
   }
   //const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
   const highScoreDirection = directions.reduce((best, direction) => {
-    if (best.score < direction.score) {
+    if (best.score < direction.score && validDirections.indexOf(direction.direction) >= 0) {
       best = direction;
     }
     return best;
