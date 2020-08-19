@@ -361,6 +361,7 @@ const WALL = -2;
 const FOOD = 1;
 const HAZARD = -1;
 const SNAKE_BODY = -2;
+const MY_BODY = -3;
 
 const scoreSpot = (board, me, position) => {
   if (position.x < 0 || position.y < 0 || position.x >= board.width || position.y >= board.height) {
@@ -379,7 +380,7 @@ const scoreSpot = (board, me, position) => {
       const head = position.x === snake.body[0].x && position.y === snake.body[0].y;
       return head ? me.body.length - snake.body.length - 1 : SNAKE_BODY;
     } else if (snake.id === me.id) {
-      return SNAKE_BODY;
+      return MY_BODY;
     } else {
       return 0;
     }
