@@ -117,8 +117,47 @@ router.post("/move", function({
       score: board[me.x][me.y - 1].score
     });
   }
+
+  const foodDirections = getClosestFood(body, me);
+  let direction, shout;
+
+  const goodDirections = _.intersection(validDirections, foodDirections);
+  let bestDirections = goodDirections.map(direction => {
+    let score = 0;
+    switch (direction) {
+      case 'up':
+        for (let i = me.y + 1; i < body.board.height; i++) {
+          if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
+          else break;
+        }
+        break;
+      case 'down':
+        for (let i = me.y - 1; i > 0; i--) {
+          if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
+          else break;
+        }
+        break;
+      case 'left':
+        for (let i = me.x - 1; i > 0; i--) {
+          if (['food', 'empty'].indexOf(board[idea][me.y].item) >= 0) score++;
+          else break;
+        }
+        break;
+      case 'right':
+        for (let i = me.x + 1; i < body.board.width; i++) {
+          if (['food', 'empty'].indexOf(board[i][me.y].item) >= 0) score++;
+          else break;
+        }
+        break;
+    }
+    return {
+      direction,
+      score
+    };
+  });
+
   //const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
-  const highScoreDirection = directions.reduce((best, direction) => {
+  let highScoreDirection = directions.reduce((best, direction) => {
     if (best.score < direction.score && validDirections.indexOf(direction.direction) >= 0) {
       best = direction;
     }
@@ -127,16 +166,25 @@ router.post("/move", function({
     score: -50,
     direction: ''
   });
-  const foodDirections = getClosestFood(body, me);
-  let direction, shout;
 
-  const bestDirections = _.intersection(validDirections, foodDirections);
-  if (bestDirections.indexOf(games[body.game.id]) >= 0) {
-    shout = 'Best Directions include Previous Direction';
-    direction = games[body.game.id];
-  } else if (bestDirections.indexOf(highScoreDirection.direction) >= 0) {
+  if (highScoreDirection.score === -50) {
+    highScoreDirection = directions.reduce((best, direction) => {
+      if (best.score < direction.score && bestDirections.indexOf(direction.direction) >= 0) {
+        best = direction;
+      }
+      return best;
+    }, {
+      score: -50,
+      direction: ''
+    });
+  }
+
+  if (bestDirections.indexOf(highScoreDirection.direction) >= 0) {
     shout = 'Best Directions include High Score Direction';
     direction = highScoreDirection.direction;
+  } else if (bestDirections.indexOf(games[body.game.id]) >= 0) {
+    shout = 'Best Directions include Previous Direction';
+    direction = games[body.game.id];
   } else if (bestDirections.length > 0) {
     shout = 'There are Best Directions, pick one';
     direction = pickDirection(bestDirections, body.you, body.board);
