@@ -122,7 +122,7 @@ router.post("/move", function({
   let direction, shout;
 
   const goodDirections = _.intersection(validDirections, foodDirections);
-  let bestDirections = goodDirections.map(direction => {
+  let bestDirections = validDirections.map(direction => {
     let score = 0;
     switch (direction) {
       case 'up':
