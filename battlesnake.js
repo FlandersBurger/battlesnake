@@ -155,6 +155,7 @@ router.post("/move", function({
       score
     };
   });
+  console.log(bestDirections);
 
   //const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
   let highScoreDirection = directions.reduce((best, direction) => {
@@ -178,16 +179,15 @@ router.post("/move", function({
       direction: ''
     });
   }
-
-  if (bestDirections.indexOf(highScoreDirection.direction) >= 0) {
+  if (goodDirections.indexOf(highScoreDirection.direction) >= 0) {
     shout = 'Best Directions include High Score Direction';
     direction = highScoreDirection.direction;
-  } else if (bestDirections.indexOf(games[body.game.id]) >= 0) {
+  } else if (goodDirections.indexOf(games[body.game.id]) >= 0) {
     shout = 'Best Directions include Previous Direction';
     direction = games[body.game.id];
-  } else if (bestDirections.length > 0) {
+  } else if (goodDirections.length > 0) {
     shout = 'There are Best Directions, pick one';
-    direction = pickDirection(bestDirections, body.you, body.board);
+    direction = pickDirection(goodDirections, body.you, body.board);
   } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
     shout = 'Valid Directions includes Previous Direction';
     direction = games[body.game.id];
