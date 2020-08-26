@@ -158,8 +158,9 @@ router.post("/move", function({
   console.log(bestDirections);
 
   //const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
-  let highScoreDirection = directions.reduce((best, direction) => {
-    if (best.score < direction.score && validDirections.indexOf(direction.direction) >= 0) {
+
+  highScoreDirection = directions.reduce((best, direction) => {
+    if (best.score < direction.score && bestDirections.indexOf(direction.direction) >= 0) {
       best = direction;
     }
     return best;
@@ -169,8 +170,8 @@ router.post("/move", function({
   });
 
   if (highScoreDirection.score === -50) {
-    highScoreDirection = directions.reduce((best, direction) => {
-      if (best.score < direction.score && bestDirections.indexOf(direction.direction) >= 0) {
+    let highScoreDirection = directions.reduce((best, direction) => {
+      if (best.score < direction.score && validDirections.indexOf(direction.direction) >= 0) {
         best = direction;
       }
       return best;
