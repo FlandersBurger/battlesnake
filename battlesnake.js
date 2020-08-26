@@ -139,7 +139,7 @@ router.post("/move", function({
         break;
       case 'left':
         for (let i = me.x - 1; i > 0; i--) {
-          if (['food', 'empty'].indexOf(board[idea][me.y].item) >= 0) score++;
+          if (['food', 'empty'].indexOf(board[i][me.y].item) >= 0) score++;
           else break;
         }
         break;
