@@ -129,48 +129,49 @@ router.post("/move", function({
   });
   const foodDirections = getClosestFood(body, me);
   let direction, shout;
-  /*
-    const bestDirections = _.intersection(validDirections, foodDirections);
-    if (bestDirections.indexOf(games[body.game.id]) >= 0) {
-      shout = 'Best Directions include Previous Direction';
-      direction = games[body.game.id];
-    } else if (bestDirections.indexOf(highScoreDirection.direction) >= 0) {
-      shout = 'Best Directions include High Score Direction';
-      direction = highScoreDirection.direction;
-    } else if (bestDirections.length > 0) {
-      shout = 'There are Best Directions, pick one';
-      direction = pickDirection(bestDirections, body.you, body.board);
-    } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
-      shout = 'Valid Directions includes Previous Direction';
-      direction = games[body.game.id];
-    } else if (validDirections.indexOf(highScoreDirection.direction) >= 0) {
-      shout = 'Valid Directions includes High Score Direction';
-      direction = highScoreDirection.direction;
-    } else if (validDirections.length > 0) {
-      shout = 'There are Valid Directions, pick one';
-      //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-      direction = pickDirection(validDirections, body.you, body.board);
-    } else {
-      shout = 'Fuck it, go into the worst direction';
-      direction = directions.reduce((worst, direction) => {
-        if (worst.score > direction.score) {
-          worst = direction;
-        }
-        return worst;
-      }, {
-        score: 50,
-        direction: ''
-      }).direction;
-    }
-  */
-  direction = highScoreDirection.direction;
+
+  const bestDirections = _.intersection(validDirections, foodDirections);
+  if (bestDirections.indexOf(games[body.game.id]) >= 0) {
+    shout = 'Best Directions include Previous Direction';
+    direction = games[body.game.id];
+  } else if (bestDirections.indexOf(highScoreDirection.direction) >= 0) {
+    shout = 'Best Directions include High Score Direction';
+    direction = highScoreDirection.direction;
+  } else if (bestDirections.length > 0) {
+    shout = 'There are Best Directions, pick one';
+    direction = pickDirection(bestDirections, body.you, body.board);
+  } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
+    shout = 'Valid Directions includes Previous Direction';
+    direction = games[body.game.id];
+  } else if (validDirections.indexOf(highScoreDirection.direction) >= 0) {
+    shout = 'Valid Directions includes High Score Direction';
+    direction = highScoreDirection.direction;
+  } else if (validDirections.length > 0) {
+    shout = 'There are Valid Directions, pick one';
+    //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
+    direction = pickDirection(validDirections, body.you, body.board);
+  } else {
+    shout = 'Fuck it, go into the worst direction';
+    direction = directions.reduce((worst, direction) => {
+      if (worst.score > direction.score) {
+        worst = direction;
+      }
+      return worst;
+    }, {
+      score: 50,
+      direction: ''
+    }).direction;
+  }
+
+  //direction = highScoreDirection.direction;
   /*
     console.log(`Valid directions: ${validDirections}`);
     console.log(`Best directions: ${bestDirections}`);
     console.log(`Food directions: ${foodDirections}`);
     console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
     console.log(`Previous direction: ${games[body.game.id]}`);
-    console.log(`Chosen direction: ${direction}`);*/
+    console.log(`Chosen direction: ${direction}`);
+  */
   games[body.game.id] = direction;
   res.json({
     move: direction,
