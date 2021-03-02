@@ -508,7 +508,7 @@ const WALL = -1;
 const FOOD = 3;
 const HAZARD = -1;
 const SNAKE_BODY = -2;
-const MY_BODY = -2;
+const MY_BODY = -3;
 
 const scoreSpot = (board, me, position, modifier = 0) => {
 	if (
