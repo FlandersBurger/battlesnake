@@ -90,12 +90,12 @@ router.post('/move', function ({ body }, res, next) {
 			validDirections.push('left');
 	}
 	if (
-		me.y < body.board.width - 1 &&
-		['food', 'empty'].indexOf(board[me.x][me.y + 1].item) >= 0 &&
+		me.y > 0 &&
+		['food', 'empty'].indexOf(board[me.x][me.y - 1].item) >= 0 &&
 		games[body.game.id] !== 'up' &&
 		checkSnake(board, body.board.snakes, body.you, {
 			x: me.x,
-			y: me.y + 1,
+			y: me.y - 1,
 		})
 	) {
 		if (
@@ -115,12 +115,12 @@ router.post('/move', function ({ body }, res, next) {
 			validDirections.push('down');
 	}
 	if (
-		me.y > 0 &&
-		['food', 'empty'].indexOf(board[me.x][me.y - 1].item) >= 0 &&
+		me.y < body.board.height - 1 &&
+		['food', 'empty'].indexOf(board[me.x][me.y + 1].item) >= 0 &&
 		games[body.game.id] !== 'down' &&
 		checkSnake(board, body.board.snakes, body.you, {
 			x: me.x,
-			y: me.y - 1,
+			y: me.y + 1,
 		})
 	) {
 		if (
@@ -284,7 +284,7 @@ router.post('/move', function ({ body }, res, next) {
 	//direction = highScoreDirection.direction;
 
 	console.log(`Valid directions: ${validDirections}`);
-	console.log(`Best directions: ${bestDirections}`);
+	console.log(`Best directions: ${bestDirections.map(dir => dir.direction)}`);
 	console.log(`Food directions: ${foodDirections}`);
 	console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
 	console.log(`Previous direction: ${games[body.game.id]}`);
