@@ -87,11 +87,11 @@ router.post('/move', function ({ body }, res, next) {
 		if (
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x - 1,
-				y: me.y + 1,
+				y: me.y - 1,
 			}) &&
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x + 1,
-				y: me.y + 1,
+				y: me.y - 1,
 			}) &&
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x,
@@ -108,11 +108,11 @@ router.post('/move', function ({ body }, res, next) {
 		if (
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x - 1,
-				y: me.y - 1,
+				y: me.y + 1,
 			}) &&
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x + 1,
-				y: me.y - 1,
+				y: me.y + 1,
 			}) &&
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x,
@@ -144,13 +144,13 @@ router.post('/move', function ({ body }, res, next) {
 	if (me.y < body.board.width - 1 && games[body.game.id] !== 'up') {
 		directions.push({
 			direction: 'down',
-			score: board[me.x][me.y + 1].score,
+			score: board[me.x][me.y - 1].score,
 		});
 	}
 	if (me.y > 0 && games[body.game.id] !== 'down') {
 		directions.push({
 			direction: 'up',
-			score: board[me.x][me.y - 1].score,
+			score: board[me.x][me.y + 1].score,
 		});
 	}
 
@@ -162,13 +162,13 @@ router.post('/move', function ({ body }, res, next) {
 		let score = 0;
 		switch (direction) {
 			case 'up':
-				for (let i = me.y + 1; i < body.board.height; i++) {
+				for (let i = me.y - 1; i < body.board.height; i++) {
 					if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
 					else break;
 				}
 				break;
 			case 'down':
-				for (let i = me.y - 1; i > 0; i--) {
+				for (let i = me.y + 1; i > 0; i--) {
 					if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
 					else break;
 				}
@@ -191,8 +191,8 @@ router.post('/move', function ({ body }, res, next) {
 			score,
 		};
 	});
-	console.log(bestDirections);
 
+	console.log(bestDirections);
 	//const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
 
 	highScoreDirection = directions.reduce(
