@@ -144,13 +144,13 @@ router.post('/move', function ({ body }, res, next) {
 	if (me.y < body.board.width - 1 && games[body.game.id] !== 'down') {
 		directions.push({
 			direction: 'up',
-			score: board[me.x][me.y - 1].score,
+			score: board[me.x][me.y + 1].score,
 		});
 	}
 	if (me.y > 0 && games[body.game.id] !== 'up') {
 		directions.push({
 			direction: 'down',
-			score: board[me.x][me.y + 1].score,
+			score: board[me.x][me.y - 1].score,
 		});
 	}
 
