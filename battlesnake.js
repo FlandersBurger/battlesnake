@@ -352,18 +352,6 @@ router.post('/move', function ({ body }, res, next) {
 router.post('/end', function (req, res, next) {
 	res.status(200).end();
 });
-router.post('/ping', function (req, res, next) {
-	res.status(200).end();
-});
-router.get('/', function (req, res, next) {
-	res.json({
-		apiversion: 1,
-		//author: "FlandersBurger",
-		color: '#5ECBC2',
-		headType: 'silly',
-		tailType: 'freckled',
-	});
-});
 
 const distance = (spot1, spot2) => {
 	return Math.abs(spot1.x - spot2.x) + Math.abs(spot1.y - spot2.y);
