@@ -371,14 +371,15 @@ const distance = (spot1, spot2) => {
 
 const pickDirection = (directions, me, board) => {
 	const head = me.body[0];
+
 	const pieces = {
-		up: board.height / 2 < head.y,
-		down: board.height / 2 > head.y,
+		up: board.height / 2 > head.y,
+		down: board.height / 2 < head.y,
 		left: board.width / 2 < head.x,
 		right: board.width / 2 > head.x,
 	};
 	const recommendedDirections = directions.filter(
-		direction => pieces[direction]
+		direction => true || pieces[direction]
 	);
 	return recommendedDirections.length > 0
 		? recommendedDirections[
