@@ -422,7 +422,7 @@ const checkSpot = (board, snakes, me, position) => {
 				position.y === snake.body[snake.body.length - 1].y;
 			return (snake.body.length < me.body.length && head) || tail || !head;
 		} else {
-			return false;
+			return true;
 		}
 	}
 };
