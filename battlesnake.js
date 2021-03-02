@@ -399,7 +399,10 @@ const checkSpot = (board, snakes, me, position) => {
 		} else if (snake.id !== me.id) {
 			const head =
 				position.x === snake.body[0].x && position.y === snake.body[0].y;
-			return (snake.body.length < me.body.length && head) || !head;
+			const tail =
+				position.x === snake.body[snake.body.length - 1].x &&
+				position.y === snake.body[snake.body.length - 1].y;
+			return (snake.body.length < me.body.length && head) || tail;
 		} else {
 			return true;
 		}
