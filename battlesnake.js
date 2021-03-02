@@ -25,6 +25,7 @@ router.post('/start', function ({ body }, res, next) {
 router.post('/move', function ({ body }, res, next) {
 	const me = body.you.body[0];
 	let board = [];
+	//Check all the spots on the board
 	for (var i = 0; i < body.board.width; i++) {
 		board.push([]);
 		for (var j = 0; j < body.board.height; j++) {
@@ -36,11 +37,16 @@ router.post('/move', function ({ body }, res, next) {
 			);
 		}
 	}
+	//Find hazards next to movable spots
 	let validDirections = [];
 	if (
 		me.x < body.board.width - 1 &&
 		['food', 'empty'].indexOf(board[me.x + 1][me.y].item) >= 0 &&
-		games[body.game.id] !== 'left'
+		games[body.game.id] !== 'left' &&
+		checkSnake(board, body.board.snakes, body.you, {
+			x: me.x + 1,
+			y: me.y,
+		})
 	) {
 		if (
 			checkSpot(board, body.board.snakes, body.you, {
@@ -61,7 +67,11 @@ router.post('/move', function ({ body }, res, next) {
 	if (
 		me.x > 0 &&
 		['food', 'empty'].indexOf(board[me.x - 1][me.y].item) >= 0 &&
-		games[body.game.id] !== 'right'
+		games[body.game.id] !== 'right' &&
+		checkSnake(board, body.board.snakes, body.you, {
+			x: me.x - 1,
+			y: me.y,
+		})
 	) {
 		if (
 			checkSpot(board, body.board.snakes, body.you, {
@@ -82,7 +92,11 @@ router.post('/move', function ({ body }, res, next) {
 	if (
 		me.y < body.board.width - 1 &&
 		['food', 'empty'].indexOf(board[me.x][me.y + 1].item) >= 0 &&
-		games[body.game.id] !== 'up'
+		games[body.game.id] !== 'up' &&
+		checkSnake(board, body.board.snakes, body.you, {
+			x: me.x,
+			y: me.y + 1,
+		})
 	) {
 		if (
 			checkSpot(board, body.board.snakes, body.you, {
@@ -103,7 +117,11 @@ router.post('/move', function ({ body }, res, next) {
 	if (
 		me.y > 0 &&
 		['food', 'empty'].indexOf(board[me.x][me.y - 1].item) >= 0 &&
-		games[body.game.id] !== 'down'
+		games[body.game.id] !== 'down' &&
+		checkSnake(board, body.board.snakes, body.you, {
+			x: me.x,
+			y: me.y - 1,
+		})
 	) {
 		if (
 			checkSpot(board, body.board.snakes, body.you, {
@@ -381,20 +399,13 @@ const pickDirection = (directions, me, board) => {
 
 const checkSpot = (board, snakes, me, position) => {
 	if (
-		position.x > 0 &&
-		position.y > 0 &&
-		position.x < board.length &&
-		position.y < board[0].length &&
-		['food', 'empty'].indexOf(board[position.x][position.y].item) >= 0
-	) {
-		return true;
-	} else if (
 		position.x < 0 ||
 		position.y < 0 ||
 		position.x >= board.length ||
-		position.y >= board[0].length
+		position.y >= board[0].length ||
+		['food', 'empty'].indexOf(board[position.x][position.y].item) >= 0
 	) {
-		return false;
+		return true;
 	} else {
 		//You can do a head-on collision if the snake is smaller than yours
 		const snake = _.find(
@@ -409,11 +420,29 @@ const checkSpot = (board, snakes, me, position) => {
 			const tail =
 				position.x === snake.body[snake.body.length - 1].x &&
 				position.y === snake.body[snake.body.length - 1].y;
-			//Check if the head of the snake is next to food
 			return (snake.body.length < me.body.length && head) || tail;
 		} else {
 			return true;
 		}
+	}
+};
+
+const checkSnake = (board, snakes, me, position) => {
+	const snake = _.find(
+		snakes,
+		snake => board[position.x][position.y].item === snake.id
+	);
+	if (!snake) {
+		return true;
+	} else if (snake.id !== me.id) {
+		const head =
+			position.x === snake.body[0].x && position.y === snake.body[0].y;
+		const tail =
+			position.x === snake.body[snake.body.length - 1].x &&
+			position.y === snake.body[snake.body.length - 1].y;
+		return (snake.body.length < me.body.length && head) || tail;
+	} else {
+		return false;
 	}
 };
 
