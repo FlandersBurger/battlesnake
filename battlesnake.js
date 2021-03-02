@@ -4,9 +4,7 @@ const _ = require('underscore');
 console.log('---> V5 <----');
 let games = {};
 
-router.get('/', function ({ body }, res, next) {
-	games[body.game.id] = body;
-	console.log(games[body.game.id]);
+router.get('/', function (req, res, next) {
 	res.json({
 		apiversion: '1',
 		author: 'DigitalBurger',
