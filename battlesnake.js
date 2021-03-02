@@ -357,6 +357,7 @@ const distance = (spot1, spot2) => {
 	return Math.abs(spot1.x - spot2.x) + Math.abs(spot1.y - spot2.y);
 };
 
+//Pick a directions outt of the given directions
 const pickDirection = (directions, me, board) => {
 	const head = me.body[0];
 
@@ -367,7 +368,7 @@ const pickDirection = (directions, me, board) => {
 		right: board.width / 2 > head.x,
 	};
 	const recommendedDirections = directions.filter(
-		direction => true || pieces[direction]
+		direction => pieces[direction]
 	);
 	return recommendedDirections.length > 0
 		? recommendedDirections[
