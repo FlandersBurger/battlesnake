@@ -4,13 +4,13 @@ const _ = require('underscore');
 console.log('---> V5 <----');
 let games = {};
 
-color = ['#5ECBC2', '#E80978', '#3E338F', '#4C89C8'];
+colors = ['#5ECBC2', '#E80978', '#3E338F', '#4C89C8'];
 
 router.get('/', function (req, res, next) {
 	res.json({
 		apiversion: '1',
 		author: 'DigitalBurger',
-		color: color[Math.floor(Math.random() * color.length)],
+		color: colors[Math.floor(Math.random() * colors.length)],
 		head: 'silly',
 		tail: 'freckled',
 	});
@@ -144,13 +144,13 @@ router.post('/move', function ({ body }, res, next) {
 	if (me.y < body.board.width - 1 && games[body.game.id] !== 'down') {
 		directions.push({
 			direction: 'up',
-			score: board[me.x][me.y + 1].score,
+			score: board[me.x][me.y - 1].score,
 		});
 	}
 	if (me.y > 0 && games[body.game.id] !== 'up') {
 		directions.push({
 			direction: 'down',
-			score: board[me.x][me.y - 1].score,
+			score: board[me.x][me.y + 1].score,
 		});
 	}
 
