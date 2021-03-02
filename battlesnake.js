@@ -381,13 +381,20 @@ const pickDirection = (directions, me, board) => {
 
 const checkSpot = (board, snakes, me, position) => {
 	if (
-		position.x < 0 ||
-		position.y < 0 ||
-		position.x >= board.length ||
-		position.y >= board[0].length ||
+		position.x > 0 &&
+		position.y > 0 &&
+		position.x >= board.length &&
+		position.y >= board[0].length &&
 		['food', 'empty'].indexOf(board[position.x][position.y].item) >= 0
 	) {
 		return true;
+	} else if (
+		position.x < 0 ||
+		position.y < 0 ||
+		position.x >= board.width ||
+		position.y >= board.height
+	) {
+		return false;
 	} else {
 		//You can do a head-on collision if the snake is smaller than yours
 		const snake = _.find(
