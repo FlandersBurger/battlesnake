@@ -576,9 +576,9 @@ const getClosestFood = (body, position) => {
 		directions.push('right');
 	}
 	if (food.y < position.y) {
-		directions.push('up');
-	} else if (food.y > position.y) {
 		directions.push('down');
+	} else if (food.y > position.y) {
+		directions.push('up');
 	}
 	return directions;
 };
