@@ -509,7 +509,7 @@ const assessSpot = (board, me, position) => {
 };
 
 const EMPTY = 0;
-const WALL = -1;
+const WALL = -3;
 const FOOD = 3;
 const HAZARD = -1;
 const SNAKE_BODY = -2;
