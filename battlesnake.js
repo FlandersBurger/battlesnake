@@ -282,14 +282,14 @@ router.post('/move', function ({ body }, res, next) {
 	}
 
 	//direction = highScoreDirection.direction;
-	/*
-    console.log(`Valid directions: ${validDirections}`);
-    console.log(`Best directions: ${bestDirections}`);
-    console.log(`Food directions: ${foodDirections}`);
-    console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
-    console.log(`Previous direction: ${games[body.game.id]}`);
-    console.log(`Chosen direction: ${direction}`);
-  */
+
+	console.log(`Valid directions: ${validDirections}`);
+	console.log(`Best directions: ${bestDirections}`);
+	console.log(`Food directions: ${foodDirections}`);
+	console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
+	console.log(`Previous direction: ${games[body.game.id]}`);
+	console.log(`Chosen direction: ${direction}`);
+
 	games[body.game.id] = direction;
 	res.json({
 		move: direction,
@@ -413,7 +413,7 @@ const checkSpot = (board, snakes, me, position) => {
 			snake => board[position.x][position.y].item === snake.id
 		);
 		if (!snake) {
-			return false;
+			return true;
 		} else if (snake.id !== me.id) {
 			const head =
 				position.x === snake.body[0].x && position.y === snake.body[0].y;
@@ -422,7 +422,7 @@ const checkSpot = (board, snakes, me, position) => {
 				position.y === snake.body[snake.body.length - 1].y;
 			return (snake.body.length < me.body.length && head) || tail;
 		} else {
-			return true;
+			return false;
 		}
 	}
 };
