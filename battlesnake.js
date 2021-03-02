@@ -93,7 +93,7 @@ router.post('/move', function ({ body }, res, next) {
 			}) &&
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x,
-				y: me.y + 2,
+				y: me.y - 2,
 			})
 		)
 			validDirections.push('down');
@@ -114,7 +114,7 @@ router.post('/move', function ({ body }, res, next) {
 			}) &&
 			checkSpot(board, body.board.snakes, body.you, {
 				x: me.x,
-				y: me.y - 2,
+				y: me.y + 2,
 			})
 		)
 			validDirections.push('up');
@@ -160,13 +160,13 @@ router.post('/move', function ({ body }, res, next) {
 		let score = 0;
 		switch (direction) {
 			case 'up':
-				for (let i = me.y - 1; i < body.board.height; i++) {
+				for (let i = me.y + 1; i < body.board.height; i++) {
 					if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
 					else break;
 				}
 				break;
 			case 'down':
-				for (let i = me.y + 1; i > 0; i--) {
+				for (let i = me.y - 1; i > 0; i--) {
 					if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
 					else break;
 				}
