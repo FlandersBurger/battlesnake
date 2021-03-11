@@ -176,22 +176,28 @@ router.post('/move', function ({ body }, res, next) {
 	let direction, shout;
 
 	const goodDirections = _.intersection(
-		validDirections.map(direction => direction.direction),
+		validDirections.map(dir => dir.direction),
 		foodDirections
 	);
 	let highScoreDirection = _.max(validDirections, direction => direction.score);
-	let bestDirections = validDirections.filter(
-		direction => direction.score === highScoreDirection.score
-	);
+	let bestDirections = validDirections
+		.filter(direction => direction.score === highScoreDirection.score)
+		.map(dir => dir.direction);
 
-	if (goodDirections.indexOf(highScoreDirection.direction) >= 0) {
-		shout = 'Best Directions include High Score Direction';
-		direction = highScoreDirection.direction;
-	} else if (goodDirections.indexOf(games[body.game.id]) >= 0) {
+	if (bestDirections.indexOf(games[body.game.id]) >= 0) {
 		shout = 'Best Directions include Previous Direction';
 		direction = games[body.game.id];
-	} else if (goodDirections.length > 0) {
+	} else if (bestDirections.length > 0) {
 		shout = 'There are Best Directions, pick one';
+		direction = pickDirection(bestDirections, body.you, body.board);
+	} else if (goodDirections.indexOf(highScoreDirection.direction) >= 0) {
+		shout = 'Good Directions include High Score Direction';
+		direction = highScoreDirection.direction;
+	} else if (goodDirections.indexOf(games[body.game.id]) >= 0) {
+		shout = 'Good Directions include Previous Direction';
+		direction = games[body.game.id];
+	} else if (goodDirections.length > 0) {
+		shout = 'There are Good Directions, pick one';
 		direction = pickDirection(goodDirections, body.you, body.board);
 	} else if (
 		_.some(
@@ -233,7 +239,6 @@ router.post('/move', function ({ body }, res, next) {
 		).direction;
 	}
 
-	//direction = highScoreDirection.direction;
 	console.log(shout);
 	console.log(`Valid directions: ${validDirections.map(dir => dir.direction)}`);
 	console.log(`Best directions: ${bestDirections.map(dir => dir.direction)}`);
@@ -247,79 +252,6 @@ router.post('/move', function ({ body }, res, next) {
 		move: direction,
 		shout,
 	});
-
-	/*
-  if (me.x < body.board.width - 2 && ['food', 'empty'].indexOf(board[me.x + 1][me.y]) >= 0) {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 2, y: me.y }))
-      validDirections.push('right');
-  }
-  if (me.x > 1 && ['food', 'empty'].indexOf(board[me.x - 1][me.y]) >= 0) {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x - 2, y: me.y }))
-      validDirections.push('left');
-  }
-  if (me.y < body.board.width - 2 && ['food', 'empty'].indexOf(board[me.x][me.y + 1]) >= 0) {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y + 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y - 2 }))
-      validDirections.push('down');
-  }
-  if (me.y > 1 && ['food', 'empty'].indexOf(board[me.x][me.y - 1]) >= 0) {
-    if (checkSpot(board, body.board.snakes, body.you, { x: me.x - 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x + 1, y: me.y - 1 }) && checkSpot(board, body.board.snakes, body.you, { x: me.x, y: me.y + 2 }))
-      validDirections.push('up');
-  }
-  if (validDirections.length === 0) {
-    if (me.x === body.board.width - 2) {
-      validDirections.push('right');
-    } else if (me.x === 1) {
-      validDirections.push('left');
-    } else if (me.y === body.board.height - 2) {
-      validDirections.push('down');
-    } else if (me.y === 1) {
-      validDirections.push('up');
-    } else if (me.x === body.board.width - 1) {
-      validDirections.push('left');
-    } else if (me.x === 0) {
-      validDirections.push('right');
-    } else if (me.y === body.board.height - 1) {
-      validDirections.push('up');
-    } else if (me.y === 0) {
-      validDirections.push('down');
-    }
-  }
-  const foodDirections = getClosestFood(body, me);
-  const bestDirections = _.intersection(validDirections, foodDirections);
-  if (body.you.health <= 50) {
-    if (bestDirections.indexOf(games[body.game.id]) >= 0) {
-      direction = games[body.game.id];
-    } else if (bestDirections.length > 0 && bestDirections.indexOf(games[body.game.id]) < 0) {
-      //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
-      direction = pickDirection(bestDirections, body.you, body.board);
-    } else if (validDirections.indexOf(games[body.game.id]) >= 0) {
-      direction = games[body.game.id];
-    } else {
-      //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-      direction = pickDirection(validDirections, body.you, body.board);
-    }
-  } else {
-    const random = Math.random() * 100;
-    console.log(`Rando! ${random}`);
-    if (random < body.you.health || bestDirections.length === 0) {
-      //direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-      direction = pickDirection(validDirections, body.you, body.board);
-    } else {
-      //direction = bestDirections[Math.floor(Math.random() * bestDirections.length)];
-      direction = pickDirection(bestDirections, body.you, body.board);
-    }
-  }
-
-  console.log(`Valid directions: ${validDirections}`);
-  console.log(`Best directions: ${bestDirections}`);
-  console.log(`Previous direction: ${games[body.game.id]}`);
-  console.log(`Chosen direction: ${direction}`);
-  console.log(`Health: ${body.you.health}`);
-  games[body.game.id] = direction;
-  res.json({
-    move: direction,
-    shout: "Moving!"
-  });*/
 });
 router.post('/end', function (req, res, next) {
 	res.status(200).end();
