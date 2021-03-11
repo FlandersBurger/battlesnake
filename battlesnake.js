@@ -184,7 +184,15 @@ router.post('/move', function ({ body }, res, next) {
 		.filter(direction => direction.score === highScoreDirection.score)
 		.map(dir => dir.direction);
 
-	if (highScoreDirection) {
+	let perfectDirection = _.intersection(
+		validDirections.map(dir => dir.direction),
+		foodDirections,
+		[highScoreDirection.direction]
+	);
+	if (perfectDirection.length > 0) {
+		shout = 'The no Brainer';
+		direction = perfectDirection[0];
+	} else if (highScoreDirection) {
 		shout = 'Go in the high score direction';
 		direction = highScoreDirection.direction;
 	} else if (bestDirections.length > 0) {
