@@ -189,6 +189,7 @@ router.post('/move', function ({ body }, res, next) {
 		foodDirections,
 		[highScoreDirection.direction]
 	);
+	/*
 	if (perfectDirection.length > 0) {
 		shout = 'The no Brainer';
 		direction = perfectDirection[0];
@@ -203,7 +204,9 @@ router.post('/move', function ({ body }, res, next) {
 			body.you,
 			body.board
 		);
-	} else if (goodDirections.indexOf(highScoreDirection.direction) >= 0) {
+	} else*/ if (
+		goodDirections.indexOf(highScoreDirection.direction) >= 0
+	) {
 		shout = 'Good Directions include High Score Direction';
 		direction = highScoreDirection.direction;
 	} else if (goodDirections.indexOf(games[body.game.id]) >= 0) {
