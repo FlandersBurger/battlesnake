@@ -48,7 +48,7 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y,
 		})
 	) {
-		const score = checkPerimeter(board, snakes, me, [
+		const score = checkPerimeter(board, body.board.snakes, body.you, [
 			{
 				x: me.x + 1,
 				y: me.y - 1,
@@ -73,7 +73,7 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y,
 		})
 	) {
-		const score = checkPerimeter(board, snakes, me, [
+		const score = checkPerimeter(board, body.board.snakes, body.you, [
 			{
 				x: me.x - 1,
 				y: me.y - 1,
@@ -98,7 +98,7 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y - 1,
 		})
 	) {
-		const score = checkPerimeter(board, snakes, me, [
+		const score = checkPerimeter(board, body.board.snakes, body.you, [
 			{
 				x: me.x - 1,
 				y: me.y - 1,
@@ -123,7 +123,7 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y + 1,
 		})
 	) {
-		const score = checkPerimeter(board, snakes, me, [
+		const score = checkPerimeter(board, body.board.snakes, body.you, [
 			{
 				x: me.x - 1,
 				y: me.y + 1,
