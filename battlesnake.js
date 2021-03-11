@@ -62,7 +62,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y,
 			},
 		]);
-		if (score >= 1) validDirections.push('right');
+		if (score > 1) validDirections.push('right');
 	}
 	if (
 		me.x > 0 &&
@@ -87,7 +87,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y,
 			},
 		]);
-		if (score >= 1) validDirections.push('left');
+		if (score > 1) validDirections.push('left');
 	}
 	if (
 		me.y > 0 &&
@@ -112,7 +112,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y - 2,
 			},
 		]);
-		if (score >= 1) validDirections.push('down');
+		if (score > 1) validDirections.push('down');
 	}
 	if (
 		me.y < body.board.height - 1 &&
@@ -137,7 +137,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y + 2,
 			},
 		]);
-		if (score >= 1) validDirections.push('up');
+		if (score > 1) validDirections.push('up');
 	}
 
 	let directions = [];
