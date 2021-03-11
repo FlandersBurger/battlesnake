@@ -196,19 +196,19 @@ router.post('/move', function ({ body }, res, next) {
 	} else if (
 		_.some(
 			validDirections,
-			direction => direction.direction === games[body.game.id]
-		)
-	) {
-		shout = 'Valid Directions includes Previous Direction';
-		direction = games[body.game.id];
-	} else if (
-		_.some(
-			validDirections,
 			direction => direction.direction === highScoreDirection.direction
 		)
 	) {
 		shout = 'Valid Directions includes High Score Direction';
 		direction = highScoreDirection.direction;
+	} else if (
+		_.some(
+			validDirections,
+			direction => direction.direction === games[body.game.id]
+		)
+	) {
+		shout = 'Valid Directions includes Previous Direction';
+		direction = games[body.game.id];
 	} else if (validDirections.length > 0) {
 		shout = 'There are Valid Directions, pick one';
 		//direction = validDirections[Math.floor(Math.random() * validDirections.length)];
