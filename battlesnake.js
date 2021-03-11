@@ -179,12 +179,10 @@ router.post('/move', function ({ body }, res, next) {
 		validDirections.map(direction => direction.direction),
 		foodDirections
 	);
-	let bestDirections = validDirections.filter(
-		direction =>
-			direction.score === _.max(validDirections, direction => direction.score)
-	);
-
 	let highScoreDirection = _.max(validDirections, direction => direction.score);
+	let bestDirections = validDirections.filter(
+		direction => direction.score === highScoreDirection.score
+	);
 
 	if (goodDirections.indexOf(highScoreDirection.direction) >= 0) {
 		shout = 'Best Directions include High Score Direction';
