@@ -245,6 +245,7 @@ router.post('/move', function ({ body }, res, next) {
 
 	console.log(shout);
 	console.log(`Valid directions: ${validDirections.map(dir => dir.direction)}`);
+	console.log(`Fantastic directions: ${fantasticDirections}`);
 	console.log(`Best directions: ${bestDirections.map(dir => dir.direction)}`);
 	console.log(`Food directions: ${foodDirections}`);
 	console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
@@ -265,8 +266,9 @@ const distance = (spot1, spot2) => {
 	return Math.abs(spot1.x - spot2.x) + Math.abs(spot1.y - spot2.y);
 };
 
-//Pick a directions outt of the given directions
+//Pick a directions out of the given directions
 const pickDirection = (directions, me, board) => {
+	if (directions.length === 1) return directions[0];
 	const head = me.body[0];
 
 	const pieces = {
