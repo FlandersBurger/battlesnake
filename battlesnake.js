@@ -48,21 +48,21 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y,
 		})
 	) {
-		if (
-			checkSpot(board, body.board.snakes, body.you, {
+		const score = checkPerimeter(board, snakes, me, [
+			{
 				x: me.x + 1,
 				y: me.y - 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x + 1,
 				y: me.y + 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x + 2,
 				y: me.y,
-			})
-		)
-			validDirections.push('right');
+			},
+		]);
+		if (score >= 1) validDirections.push('right');
 	}
 	if (
 		me.x > 0 &&
@@ -73,21 +73,21 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y,
 		})
 	) {
-		if (
-			checkSpot(board, body.board.snakes, body.you, {
+		const score = checkPerimeter(board, snakes, me, [
+			{
 				x: me.x - 1,
 				y: me.y - 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x - 1,
 				y: me.y + 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x - 2,
 				y: me.y,
-			})
-		)
-			validDirections.push('left');
+			},
+		]);
+		if (score >= 1) validDirections.push('left');
 	}
 	if (
 		me.y > 0 &&
@@ -98,21 +98,21 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y - 1,
 		})
 	) {
-		if (
-			checkSpot(board, body.board.snakes, body.you, {
+		const score = checkPerimeter(board, snakes, me, [
+			{
 				x: me.x - 1,
 				y: me.y - 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x + 1,
 				y: me.y - 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x,
 				y: me.y - 2,
-			})
-		)
-			validDirections.push('down');
+			},
+		]);
+		if (score >= 1) validDirections.push('down');
 	}
 	if (
 		me.y < body.board.height - 1 &&
@@ -123,21 +123,21 @@ router.post('/move', function ({ body }, res, next) {
 			y: me.y + 1,
 		})
 	) {
-		if (
-			checkSpot(board, body.board.snakes, body.you, {
+		const score = checkPerimeter(board, snakes, me, [
+			{
 				x: me.x - 1,
 				y: me.y + 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x + 1,
 				y: me.y + 1,
-			}) &&
-			checkSpot(board, body.board.snakes, body.you, {
+			},
+			{
 				x: me.x,
 				y: me.y + 2,
-			})
-		)
-			validDirections.push('up');
+			},
+		]);
+		if (score >= 1) validDirections.push('up');
 	}
 
 	let directions = [];
@@ -396,6 +396,13 @@ const pickDirection = (directions, me, board) => {
 		  ]
 		: directions[Math.floor(Math.random() * directions.length)];
 };
+
+const checkPerimeter = (board, snakes, me, positions) =>
+	positions.reduce(
+		(score, position) =>
+			score + (checkSpot(board, snakes, me, position) ? 1 : 0),
+		0
+	);
 
 const checkSpot = (board, snakes, me, position) => {
 	if (
