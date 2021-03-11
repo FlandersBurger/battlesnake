@@ -176,7 +176,7 @@ router.post('/move', function ({ body }, res, next) {
 	let direction, shout;
 
 	const goodDirections = _.intersection(
-		validDirections.map(direction, direction.direction),
+		validDirections.map(direction => direction.direction),
 		foodDirections
 	);
 	let bestDirections = validDirections.filter(direction => direction.score > 1);
