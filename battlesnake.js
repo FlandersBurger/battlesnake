@@ -282,7 +282,7 @@ router.post('/move', function ({ body }, res, next) {
 	}
 
 	//direction = highScoreDirection.direction;
-
+	console.log(shout);
 	console.log(`Valid directions: ${validDirections}`);
 	console.log(`Best directions: ${bestDirections.map(dir => dir.direction)}`);
 	console.log(`Food directions: ${foodDirections}`);
