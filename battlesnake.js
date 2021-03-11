@@ -62,7 +62,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y,
 			},
 		]);
-		if (score > 1) validDirections.push('right');
+		if (score >= 1) validDirections.push({ direction: 'right', score });
 	}
 	if (
 		me.x > 0 &&
@@ -87,7 +87,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y,
 			},
 		]);
-		if (score > 1) validDirections.push('left');
+		if (score >= 1) validDirections.push({ direction: 'left', score });
 	}
 	if (
 		me.y > 0 &&
@@ -112,7 +112,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y - 2,
 			},
 		]);
-		if (score > 1) validDirections.push('down');
+		if (score >= 1) validDirections.push({ direction: 'down', score });
 	}
 	if (
 		me.y < body.board.height - 1 &&
@@ -137,7 +137,7 @@ router.post('/move', function ({ body }, res, next) {
 				y: me.y + 2,
 			},
 		]);
-		if (score > 1) validDirections.push('up');
+		if (score >= 1) validDirections.push({ direction: 'up', score });
 	}
 
 	let directions = [];
@@ -175,77 +175,14 @@ router.post('/move', function ({ body }, res, next) {
 	const foodDirections = getClosestFood(body, me);
 	let direction, shout;
 
-	const goodDirections = _.intersection(validDirections, foodDirections);
-	let bestDirections = validDirections.map(direction => {
-		let score = 0;
-		switch (direction) {
-			case 'up':
-				for (let i = me.y + 1; i < body.board.height; i++) {
-					if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
-					else break;
-				}
-				break;
-			case 'down':
-				for (let i = me.y - 1; i > 0; i--) {
-					if (['food', 'empty'].indexOf(board[me.x][i].item) >= 0) score++;
-					else break;
-				}
-				break;
-			case 'left':
-				for (let i = me.x - 1; i > 0; i--) {
-					if (['food', 'empty'].indexOf(board[i][me.y].item) >= 0) score++;
-					else break;
-				}
-				break;
-			case 'right':
-				for (let i = me.x + 1; i < body.board.width; i++) {
-					if (['food', 'empty'].indexOf(board[i][me.y].item) >= 0) score++;
-					else break;
-				}
-				break;
-		}
-		return {
-			direction,
-			score,
-		};
-	});
-
-	console.log(bestDirections);
-	//const validDirections = directions.filter(direction => direction.score > -5).map(direction => direction.direction);
-
-	highScoreDirection = directions.reduce(
-		(best, direction) => {
-			if (
-				best.score < direction.score &&
-				bestDirections.indexOf(direction.direction) >= 0
-			) {
-				best = direction;
-			}
-			return best;
-		},
-		{
-			score: -50,
-			direction: '',
-		}
+	const goodDirections = _.intersection(
+		validDirections.map(direction, direction.direction),
+		foodDirections
 	);
+	let bestDirections = validDirections.filter(direction => direction.score > 1);
 
-	if (highScoreDirection.score === -50) {
-		let highScoreDirection = directions.reduce(
-			(best, direction) => {
-				if (
-					best.score < direction.score &&
-					validDirections.indexOf(direction.direction) >= 0
-				) {
-					best = direction;
-				}
-				return best;
-			},
-			{
-				score: -50,
-				direction: '',
-			}
-		);
-	}
+	let highScoreDirection = _.max(validDirections, direction => direction.score);
+
 	if (goodDirections.indexOf(highScoreDirection.direction) >= 0) {
 		shout = 'Best Directions include High Score Direction';
 		direction = highScoreDirection.direction;
@@ -255,16 +192,30 @@ router.post('/move', function ({ body }, res, next) {
 	} else if (goodDirections.length > 0) {
 		shout = 'There are Best Directions, pick one';
 		direction = pickDirection(goodDirections, body.you, body.board);
-	} else if (validDirections.indexOf(games[body.game.id]) >= 0) {
+	} else if (
+		_.some(
+			validDirections,
+			direction => direction.direction === games[body.game.id]
+		)
+	) {
 		shout = 'Valid Directions includes Previous Direction';
 		direction = games[body.game.id];
-	} else if (validDirections.indexOf(highScoreDirection.direction) >= 0) {
+	} else if (
+		_.some(
+			validDirections,
+			direction => direction.direction === highScoreDirection.direction
+		)
+	) {
 		shout = 'Valid Directions includes High Score Direction';
 		direction = highScoreDirection.direction;
 	} else if (validDirections.length > 0) {
 		shout = 'There are Valid Directions, pick one';
 		//direction = validDirections[Math.floor(Math.random() * validDirections.length)];
-		direction = pickDirection(validDirections, body.you, body.board);
+		direction = pickDirection(
+			validDirections.map(direction, direction.direction),
+			body.you,
+			body.board
+		);
 	} else {
 		shout = 'Fuck it, go into the worst direction';
 		direction = directions.reduce(
