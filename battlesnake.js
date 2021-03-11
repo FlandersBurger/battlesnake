@@ -184,7 +184,10 @@ router.post('/move', function ({ body }, res, next) {
 		.filter(direction => direction.score === highScoreDirection.score)
 		.map(dir => dir.direction);
 
-	if (bestDirections.length > 0) {
+	if (highScoreDirection) {
+		shout = 'Go in the high score direction';
+		direction = highScoreDirection.direction;
+	} else if (bestDirections.length > 0) {
 		shout = 'There are Best Directions, pick one';
 		const fantasticDirections = _.intersection(bestDirections, foodDirections);
 		direction = pickDirection(
