@@ -179,7 +179,10 @@ router.post('/move', function ({ body }, res, next) {
 		validDirections.map(direction => direction.direction),
 		foodDirections
 	);
-	let bestDirections = validDirections.filter(direction => direction.score > 1);
+	let bestDirections = validDirections.filter(
+		direction =>
+			direction.score === _.max(validDirections, direction => direction.score)
+	);
 
 	let highScoreDirection = _.max(validDirections, direction => direction.score);
 
