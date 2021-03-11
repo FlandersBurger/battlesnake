@@ -183,12 +183,15 @@ router.post('/move', function ({ body }, res, next) {
 	let bestDirections = validDirections
 		.filter(direction => direction.score === highScoreDirection.score)
 		.map(dir => dir.direction);
-	if (bestDirections.indexOf(games[body.game.id]) >= 0) {
-		shout = 'Best Directions include Previous Direction';
-		direction = games[body.game.id];
-	} else if (bestDirections.length > 0) {
+
+	if (bestDirections.length > 0) {
 		shout = 'There are Best Directions, pick one';
-		direction = pickDirection(bestDirections, body.you, body.board);
+		const fantasticDirections = _.intersection(bestDirections, foodDirections);
+		direction = pickDirection(
+			fantasticDirections.length > 0 ? fantasticDirections : bestDirections,
+			body.you,
+			body.board
+		);
 	} else if (goodDirections.indexOf(highScoreDirection.direction) >= 0) {
 		shout = 'Good Directions include High Score Direction';
 		direction = highScoreDirection.direction;
