@@ -183,12 +183,7 @@ router.post('/move', function ({ body }, res, next) {
 	let bestDirections = validDirections
 		.filter(direction => direction.score === highScoreDirection.score)
 		.map(dir => dir.direction);
-	let fantasticDirections = _.intersection(bestDirections, foodDirections);
-
-	if (fantasticDirections.length > 0) {
-		shout = "There's a no brainer";
-		direction = pickDirection(fantasticDirections, body.you, body.board);
-	} else if (bestDirections.indexOf(games[body.game.id]) >= 0) {
+	if (bestDirections.indexOf(games[body.game.id]) >= 0) {
 		shout = 'Best Directions include Previous Direction';
 		direction = games[body.game.id];
 	} else if (bestDirections.length > 0) {
@@ -245,8 +240,7 @@ router.post('/move', function ({ body }, res, next) {
 
 	console.log(shout);
 	console.log(`Valid directions: ${validDirections.map(dir => dir.direction)}`);
-	console.log(`Fantastic directions: ${fantasticDirections}`);
-	console.log(`Best directions: ${bestDirections.map(dir => dir.direction)}`);
+	console.log(`Best directions: ${bestDirections}`);
 	console.log(`Food directions: ${foodDirections}`);
 	console.log(`Highest Scored direction: ${highScoreDirection.direction}`);
 	console.log(`Previous direction: ${games[body.game.id]}`);
