@@ -437,6 +437,10 @@ const assessSpot = (board, me, position) => {
 		},
 		me.health < 50 ? 1 : 0
 	);
+	const hazard = _.some(
+		board.hazards,
+		hazard => hazard.x === position.x && hazard.y === position.y
+	);
 	const snake = _.find(board.snakes, snake =>
 		_.some(
 			snake.body,
@@ -448,7 +452,7 @@ const assessSpot = (board, me, position) => {
 		piece => piece.x === position.x && piece.y === position.y
 	);
 	return {
-		item: snake ? snake.id : food ? 'food' : 'empty',
+		item: hazard ? 'hazard' : snake ? snake.id : food ? 'food' : 'empty',
 		score,
 	};
 };
